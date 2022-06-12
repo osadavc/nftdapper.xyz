@@ -12,10 +12,9 @@ const IntroSection = () => {
   const { signIn } = useSignIn();
 
   useEffect(() => {
-    const intervalId = setInterval(
-      () => setTextIndex((index) => index + 1),
-      3000
-    );
+    const intervalId = setInterval(() => {
+      setTextIndex((index) => index + 1);
+    }, 5000);
     return () => clearTimeout(intervalId);
   }, []);
 
@@ -34,6 +33,7 @@ const IntroSection = () => {
           color="#787fe736"
           animate
           show
+          iterations={1}
         >
           <span>In A Few Clicks</span>
         </RoughNotation>{" "}
