@@ -1,30 +1,9 @@
 import Link from "next/link";
 
-import { useAccount, useConnect, useSignMessage } from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
-
-import { SIGN_MESSAGE } from "../../data/constants";
+import useSignIn from "../../hooks/useSignIn";
 
 const Header = () => {
-  const { data: account } = useAccount();
-  const { connectAsync: connect } = useConnect({
-    connector: new InjectedConnector(),
-  });
-  const { signMessageAsync: signMessage, data: signedMessage } = useSignMessage(
-    {
-      message: SIGN_MESSAGE,
-    }
-  );
-
-  const signIn = async () => {
-    try {
-      if (!account?.address) {
-        await connect();
-      }
-      const signedMessage = await signMessage();
-      localStorage.setItem("signedMessage", signedMessage);
-    } catch (error) {}
-  };
+  const { address, signIn, signedMessage } = useSignIn();
 
   return (
     <div className="px-4 2xl:px-8 py-4 flex justify-between items-center text-xl border-b shadow-sm font-nunito font-medium">
@@ -36,7 +15,7 @@ const Header = () => {
       </Link>
 
       <div>
-        {account?.address && signedMessage ? (
+        {address && signedMessage ? (
           <Link href="/dashboard" passHref>
             <button className="bg-black flex justify-center items-center space-x-2 text-white py-2 px-4 rounded-md transition-shadow hover:shadow-sm">
               <p>Go To Dashboard</p>

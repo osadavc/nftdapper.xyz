@@ -14,8 +14,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <WagmiConfig client={client}>
       <Head>
         <title>
-          NFT Dapper | The Easiest Way To Kick Off Your NFT Collection Without
-          Code
+          NFT Dapper | The Easiest Way To Kick Off Your NFT Drop Without Code
         </title>
         <meta
           name="description"
