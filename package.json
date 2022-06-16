@@ -7,6 +7,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/core": "^4.2.9",
+    "@mantine/hooks": "^4.2.9",
+    "@mantine/next": "^4.2.9",
+    "@mantine/notifications": "^4.2.9",
     "@prisma/client": "^3.15.1",
     "axios": "^0.27.2",
     "cookies": "^0.8.0",
@@ -22,8 +26,8 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
-    "@types/jsonwebtoken": "^8.5.8",
     "@types/cookies": "^0.7.7",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "17.0.42",
     "@types/react": "18.0.12",
     "autoprefixer": "^10.4.7",

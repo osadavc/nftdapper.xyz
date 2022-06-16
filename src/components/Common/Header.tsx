@@ -26,7 +26,7 @@ const Header = () => {
           </Link>
         ) : (
           <button
-            className="bg-black flex justify-center items-center space-x-2 text-white py-2 px-4 rounded-md transition-shadow hover:shadow-sm"
+            className="bg-black flex justify-center items-center space-x-2 text-white py-2 px-4 rounded-md transition-shadow hover:shadow-sm disabled:opacity-75"
             onClick={signIn}
             disabled={signingIn}
           >
@@ -35,7 +35,7 @@ const Header = () => {
               alt="Metamask Icon"
               className="h-7"
             />
-            <p>{signingIn ? "Signing You In ..." : "Login With Metamask"}</p>
+            <p>Login With Metamask</p>
           </button>
         )}
       </div>
