@@ -12,5 +12,5 @@ datasource db {
 
 model User {
   id            String @id @default(cuid())
-  walletAddress String
+  walletAddress String @unique
 }

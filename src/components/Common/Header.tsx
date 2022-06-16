@@ -1,9 +1,12 @@
 import Link from "next/link";
 
+import { useUser } from "context/AuthContext";
+
 import useSignIn from "../../hooks/useSignIn";
 
 const Header = () => {
-  const { address, signIn, signedMessage } = useSignIn();
+  const { signIn, signingIn } = useSignIn();
+  const user = useUser();
 
   return (
     <div className="px-4 2xl:px-8 py-4 flex justify-between items-center text-xl border-b shadow-sm font-nunito font-medium">
@@ -15,7 +18,7 @@ const Header = () => {
       </Link>
 
       <div>
-        {address && signedMessage ? (
+        {user ? (
           <Link href="/dashboard" passHref>
             <button className="bg-black flex justify-center items-center space-x-2 text-white py-2 px-4 rounded-md transition-shadow hover:shadow-sm">
               <p>Go To Dashboard</p>
@@ -25,13 +28,14 @@ const Header = () => {
           <button
             className="bg-black flex justify-center items-center space-x-2 text-white py-2 px-4 rounded-md transition-shadow hover:shadow-sm"
             onClick={signIn}
+            disabled={signingIn}
           >
             <img
               src="/icons/metamask.png"
               alt="Metamask Icon"
               className="h-7"
             />
-            <p>Login With Metamask</p>
+            <p>{signingIn ? "Signing You In ..." : "Login With Metamask"}</p>
           </button>
         )}
       </div>

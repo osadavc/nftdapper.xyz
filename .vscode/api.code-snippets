@@ -1,0 +1,39 @@
+{
+  "Next Connect API Function": {
+    "prefix": "ncaf",
+    "body": [
+      "import { NextApiResponse } from \"next\";",
+      "import nc from \"next-connect\";",
+      "",
+      "import { onError, onNoMatch, NextApiRequestWithUser } from \"utils/apiUtils\";",
+      "",
+      "const handler = nc<NextApiRequestWithUser, NextApiResponse>({",
+      "  onError,",
+      "  onNoMatch,",
+      "});",
+      "",
+      "export default handler;"
+    ],
+    "description": "Create Next Connect API Function",
+    "scope": "typescript,javascript"
+  },
+  "Next Connect API Function With Auth": {
+    "prefix": "ncafa",
+    "body": [
+      "import { NextApiResponse } from \"next\";",
+      "import nc from \"next-connect\";",
+      "",
+      "import { auth, onError, onNoMatch, NextApiRequestWithUser } from \"utils/apiUtils\";",
+      "",
+      "const handler = nc<NextApiRequestWithUser, NextApiResponse>({",
+      "  onError,",
+      "  onNoMatch,",
+      "})",
+      "  .use(auth)",
+      "",
+      "export default handler;"
+    ],
+    "description": "Create Next Connect API Function With Auth",
+    "scope": "typescript,javascript"
+  }
+}

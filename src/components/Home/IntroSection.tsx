@@ -20,12 +20,12 @@ const IntroSection = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 pt-24 flex flex-col items-center">
-      <h1 className="font-extrabold text-black text-7xl text-center leading-[85px]">
+      <h1 className="font-extrabold text-black text-5xl md:text-6xl lg:text-7xl text-center leading-[60px] md:leading-[85px]">
         Build Your{" "}
         <span className="bg-gradient-to-r from-[#7880e7] to-[#2a3192] bg-clip-text text-transparent">
           NFT Drop
         </span>{" "}
-        Without Coding{" "}
+        <span>In A Few Clicks</span>{" "}
         <RoughNotation
           type="highlight"
           strokeWidth={2}
@@ -33,13 +33,13 @@ const IntroSection = () => {
           color="#787fe736"
           animate
           show
-          iterations={1}
+          multiline
         >
-          <span>In A Few Clicks</span>
-        </RoughNotation>{" "}
+          Without Coding
+        </RoughNotation>
       </h1>
 
-      <h2 className="text-center text-3xl font-medium mt-5 flex space-x-[0.35rem] justify-center">
+      <h2 className="text-center text-2xl md:text-3xl font-medium mt-5 flex space-x-[0.35rem] justify-center">
         <p>Perfect For</p>{" "}
         <TextTransition
           text={`${texts[textIndex % texts.length]}.`}
@@ -48,7 +48,7 @@ const IntroSection = () => {
         />{" "}
       </h2>
 
-      <p className="text-xl text-center w-[80%] mt-12">
+      <p className="text-lg md:text-xl text-center w-[80%] mt-12">
         Deploy Your Contract, Interact With It And Even Create Your Frontend For
         Minting NFTs With NFT Dapper. You own everything ! Your contract is
         yours. We don&apos;t own your contract but you do !
