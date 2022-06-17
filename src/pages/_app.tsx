@@ -1,9 +1,12 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import Router from "next/router";
 
 import { MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import AuthProvider from "context/AuthContext";
+import nProgress from "nprogress";
+import "nprogress/nprogress.css";
 import { WagmiConfig, createClient } from "wagmi";
 
 import "../styles/globals.css";
@@ -11,6 +14,10 @@ import "../styles/globals.css";
 const client = createClient({
   autoConnect: true,
 });
+
+Router.events.on("routeChangeStart", nProgress.start);
+Router.events.on("routeChangeError", nProgress.done);
+Router.events.on("routeChangeComplete", nProgress.done);
 
 const MyApp = ({ Component, pageProps: { user, ...pageProps } }: AppProps) => {
   return (

@@ -50,7 +50,7 @@ const Dashboard = () => {
       <div className="mx-auto max-w-6xl pt-10 px-4">
         <div className="text-2xl flex items-center">
           <div className="flex-grow font-nunito">
-            <h3 className="font-bold">NFT Dapper Projects</h3>
+            <h3 className="font-bold">Projects</h3>
             <h4 className="text-base font-inter capitalize">
               Create Or Manage Your Projects Below
             </h4>

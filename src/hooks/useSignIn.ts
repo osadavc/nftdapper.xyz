@@ -5,6 +5,7 @@ import {
   hideNotification,
   updateNotification,
 } from "@mantine/notifications";
+import { useUser } from "context/AuthContext";
 import { useState } from "react";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -27,22 +28,21 @@ const notificationOptions = {
 const useSignIn = () => {
   const [loading, setLoading] = useState(false);
 
+  const user = useUser();
   const { data: account } = useAccount();
   const { connectAsync: connect } = useConnect({
     connector: new InjectedConnector(),
   });
-  const { signMessageAsync: signMessage, data: signedMessage } = useSignMessage(
-    {
-      message: SIGN_MESSAGE,
-    }
-  );
+  const { signMessageAsync: signMessage } = useSignMessage({
+    message: SIGN_MESSAGE,
+  });
 
   const router = useRouter();
 
   const signIn = async () => {
     setLoading(true);
 
-    if (account?.address && signedMessage) {
+    if (user) {
       return router.push("/dashboard");
     }
 
