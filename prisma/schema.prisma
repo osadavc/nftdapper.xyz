@@ -14,12 +14,12 @@ model User {
 }
 
 model Project {
-  id          String @id @default(cuid())
-  name        String @unique
-  description String
-  owner       User   @relation(fields: [ownerId], references: [id])
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+  owner       User    @relation(fields: [ownerId], references: [id])
   ownerId     String
-  chaindId    Chain
+  chainId     Chain
 }
 
 enum Chain {

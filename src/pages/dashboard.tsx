@@ -1,15 +1,21 @@
 import { GetServerSideProps } from "next";
 
-import { ActionIcon, Drawer, Tooltip } from "@mantine/core";
-import { useState } from "react";
-import { TbPlus } from "react-icons/tb";
+import { Drawer } from "@mantine/core";
+import { Project } from "@prisma/client";
+import { FC, useState } from "react";
 
 import Header from "components/Common/Header";
 import CreateProjectDrawerContent from "components/Dashboard/CreateProjectDrawerContent";
+import DashboardHeader from "components/Dashboard/DashboardHeader";
 
 import { getUser } from "utils/apiUtils";
+import { getAllProjectsFromAUser } from "utils/dbCalls";
 
-const Dashboard = () => {
+interface DashboardProps {
+  projects: Project[];
+}
+
+const Dashboard: FC<DashboardProps> = ({ projects }) => {
   const [isNewProjectDrawerOpen, setIsNewProjectDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -44,40 +50,27 @@ const Dashboard = () => {
         padding="xl"
         size="xl"
       >
-        <CreateProjectDrawerContent />
+        <CreateProjectDrawerContent toggleDrawer={toggleDrawer} />
       </Drawer>
 
       <div className="mx-auto max-w-6xl pt-10 px-4">
-        <div className="text-2xl flex items-center">
-          <div className="flex-grow font-nunito">
-            <h3 className="font-bold">Projects</h3>
-            <h4 className="text-base font-inter capitalize">
-              Create Or Manage Your Projects Below
-            </h4>
-          </div>
-
-          <Tooltip label="Create New Project">
-            <ActionIcon
-              className="bg-black text-white hover:bg-black/90"
-              onClick={toggleDrawer}
-            >
-              <TbPlus />
-            </ActionIcon>
-          </Tooltip>
-        </div>
+        <DashboardHeader toggleDrawer={toggleDrawer} />
 
         <div className="mt-7">
-          <p className="text-center text-zinc-500 mt-10">
-            No Projects Created, Click{" "}
-            <span
-              className="text-sky-500 font-medium cursor-pointer"
-              onClick={toggleDrawer}
-            >
-              Here
-            </span>{" "}
-            To Create A New Project.
-          </p>
+          {projects.length == 0 && (
+            <p className="text-center text-zinc-500 mt-10">
+              No Projects Created, Click{" "}
+              <span
+                className="text-sky-500 font-medium cursor-pointer"
+                onClick={toggleDrawer}
+              >
+                Here
+              </span>{" "}
+              To Create A New Project.
+            </p>
+          )}
           {/* <div className="w-full bg-gray-50 h-32 rounded-md" /> */}
+          {JSON.stringify(projects)}
         </div>
       </div>
     </div>
@@ -85,9 +78,23 @@ const Dashboard = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const user = await getUser(ctx);
+
+  if (!user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  }
+
+  const projects = await getAllProjectsFromAUser(user?.id);
+
   return {
     props: {
-      user: await getUser(ctx),
+      user,
+      projects,
     },
   };
 };

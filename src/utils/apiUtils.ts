@@ -71,7 +71,7 @@ export const getUser = async ({
     return null;
   }
 
-  const payload = await jwt.verify(accessToken, JWT_SECRET);
+  const payload: User = (await jwt.verify(accessToken, JWT_SECRET)) as User;
 
   if (!payload) {
     return null;
