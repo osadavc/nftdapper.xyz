@@ -8,7 +8,7 @@ import useSignIn from "../../hooks/useSignIn";
 const Header = () => {
   const { pathname } = useRouter();
   const { signIn, loading, signOut } = useSignIn();
-  const user = useUser();
+  const { user } = useUser();
 
   const isDashboard = pathname === "/dashboard";
 

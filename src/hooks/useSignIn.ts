@@ -28,7 +28,7 @@ const notificationOptions = {
 const useSignIn = () => {
   const [loading, setLoading] = useState(false);
 
-  const user = useUser();
+  const { user, setUser } = useUser();
   const { data: account } = useAccount();
   const { connectAsync: connect } = useConnect({
     connector: new InjectedConnector(),
@@ -87,9 +87,9 @@ const useSignIn = () => {
     try {
       await client.delete("/auth/signOut");
       router.push("/");
-    } catch (error) {
     } finally {
       setLoading(false);
+      setUser(null);
     }
   };
 

@@ -4,8 +4,10 @@ import { User } from "utils/apiUtils";
 
 const AuthContext = createContext<{
   user: User | null;
+  setUser: (user: User | null) => void;
 }>({
   user: null,
+  setUser: () => {},
 });
 
 interface AuthContextProps {
@@ -19,7 +21,7 @@ export const useUser = () => {
     throw new Error("useUser must be used within a AuthProvider");
   }
 
-  return context.user;
+  return { user: context.user, setUser: context.setUser };
 };
 
 const AuthProvider: FC<AuthContextProps> = ({ children, user: passedUser }) => {
@@ -32,7 +34,9 @@ const AuthProvider: FC<AuthContextProps> = ({ children, user: passedUser }) => {
   }, [passedUser]);
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

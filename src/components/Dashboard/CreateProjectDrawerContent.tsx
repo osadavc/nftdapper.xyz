@@ -31,7 +31,7 @@ const CreateProjectDrawerContent: FC<CreateProjectDrawerContentProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
 
-  const user = useUser();
+  const { user } = useUser();
   const form = useForm({
     initialValues: {
       projectName: "",
