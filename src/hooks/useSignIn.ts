@@ -25,7 +25,7 @@ const notificationOptions = {
 };
 
 const useSignIn = () => {
-  const [signingIn, setSigningIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { data: account } = useAccount();
   const { connectAsync: connect } = useConnect({
@@ -40,26 +40,26 @@ const useSignIn = () => {
   const router = useRouter();
 
   const signIn = async () => {
-    setSigningIn(true);
-    showNotification({
-      message: "Connect Metamask To Continue",
-      ...notificationOptions,
-    });
+    setLoading(true);
 
     if (account?.address && signedMessage) {
       return router.push("/dashboard");
     }
 
+    showNotification({
+      message: "Connect Metamask To Continue",
+      ...notificationOptions,
+    });
+
     try {
       if (!account?.address) {
         await connect();
       }
-      showNotification({
+      updateNotification({
         message: "Sign The Message In Metamask To Continue",
         ...notificationOptions,
       });
       const signedMessage = await signMessage();
-      localStorage.setItem("signedMessage", signedMessage);
 
       updateNotification({
         ...notificationOptions,
@@ -71,15 +71,29 @@ const useSignIn = () => {
       });
       hideNotification("sign-in-notification");
 
-      await router.push("/dashboard");
+      const status = await router.push("/dashboard");
+      // TODO: Remove This
+      console.log(status);
     } catch (error) {
+      console.log(error);
     } finally {
-      setSigningIn(false);
+      setLoading(false);
       hideNotification("sign-in-notification");
     }
   };
 
-  return { signIn, signingIn };
+  const signOut = async () => {
+    setLoading(true);
+    try {
+      await client.delete("/auth/signOut");
+      router.push("/");
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { signIn, signOut, loading };
 };
 
 export default useSignIn;

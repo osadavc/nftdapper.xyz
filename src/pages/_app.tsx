@@ -16,6 +16,17 @@ const MyApp = ({ Component, pageProps: { user, ...pageProps } }: AppProps) => {
   return (
     <MantineProvider
       theme={{
+        colors: {
+          main: [
+            "#2a3192",
+            "#545aa2",
+            "#484d8b",
+            "#3c4074",
+            "#7880e7",
+            "#6066b9",
+          ],
+        },
+        primaryColor: "main",
         fontFamily: "Nunito, sans-serif",
       }}
     >
