@@ -2,11 +2,13 @@ import { GetServerSideProps } from "next";
 
 import { Drawer } from "@mantine/core";
 import { Project } from "@prisma/client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import useStore from "store";
 
 import Header from "components/Common/Header";
-import CreateProjectDrawerContent from "components/Dashboard/CreateProjectDrawerContent";
+import CreateProjectDrawerContent from "components/Dashboard/CreateProjectDrawer";
 import DashboardHeader from "components/Dashboard/DashboardHeader";
+import ProjectCard from "components/Dashboard/ProjectCard";
 
 import { getUser } from "utils/apiUtils";
 import { getAllProjectsFromAUser } from "utils/dbCalls";
@@ -15,8 +17,14 @@ interface DashboardProps {
   projects: Project[];
 }
 
-const Dashboard: FC<DashboardProps> = ({ projects }) => {
+const Dashboard: FC<DashboardProps> = ({ projects: serverProjects }) => {
   const [isNewProjectDrawerOpen, setIsNewProjectDrawerOpen] = useState(false);
+  const projects = useStore((state) => state.projects);
+
+  useEffect(() => {
+    useStore.setState({ projects: serverProjects });
+  }, []);
+
 
   const toggleDrawer = () => {
     setIsNewProjectDrawerOpen((prevState) => !prevState);
@@ -69,8 +77,12 @@ const Dashboard: FC<DashboardProps> = ({ projects }) => {
               To Create A New Project.
             </p>
           )}
-          {/* <div className="w-full bg-gray-50 h-32 rounded-md" /> */}
-          {JSON.stringify(projects)}
+
+          <div className="space-y-4">
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
         </div>
       </div>
     </div>

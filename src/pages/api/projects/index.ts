@@ -20,21 +20,22 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
     res.status(200).json(projects);
   })
   .post(async (req, res) => {
-    const { name, chainId } = req.body;
+    const { name, chainId, description } = req.body;
 
-    if (!name || !chainId) {
+    if (!name || !chainId || !description) {
       res.status(400).json({
         error: "Missing required fields",
       });
     }
 
-    const project = createANewProject({
+    const project = await createANewProject({
       chainId,
       name,
+      description,
       ownerId: req.user.id,
     });
 
-    res.status(201).json(project);
+    res.status(200).json(project);
   });
 
 export default handler;

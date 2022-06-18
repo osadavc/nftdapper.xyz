@@ -25,7 +25,8 @@
     "react-icons": "^4.4.0",
     "react-rough-notation": "^1.0.2",
     "react-text-transition": "^2.0.0",
-    "wagmi": "^0.4.12"
+    "wagmi": "^0.4.12",
+    "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",

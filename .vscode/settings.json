@@ -1,3 +1,11 @@
 {
-  "cSpell.words": ["BUIDL", "mantine", "nprogress", "Solana", "trivago"]
+  "cSpell.words": [
+    "autosize",
+    "BUIDL",
+    "mantine",
+    "nprogress",
+    "Solana",
+    "trivago",
+    "zustand"
+  ]
 }

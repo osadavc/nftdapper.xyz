@@ -16,16 +16,25 @@ export const createANewProject = async ({
   ownerId,
   name,
   chainId,
+  description,
 }: {
   ownerId: string;
   name: string;
   chainId: number;
+  description: string;
 }) => {
   const project = await prisma.project.create({
     data: {
       name,
       chainId: `CHAIN${chainId}` as Chain,
       ownerId,
+      description,
+    },
+    select: {
+      name: true,
+      id: true,
+      chainId: true,
+      description: true,
     },
   });
 

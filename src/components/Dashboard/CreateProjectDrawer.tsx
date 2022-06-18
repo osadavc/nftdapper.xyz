@@ -6,6 +6,7 @@ import {
   Select,
   Tooltip,
   Loader,
+  Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
@@ -13,6 +14,7 @@ import { useUser } from "context/AuthContext";
 import { CHAINS } from "data/constants";
 import { FC, forwardRef, useState } from "react";
 import { GrCircleInformation } from "react-icons/gr";
+import useStore from "store";
 
 import client from "utils/apiClient";
 
@@ -22,11 +24,11 @@ interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
   isTestnet: boolean;
 }
 
-interface CreateProjectDrawerContentProps {
+interface CreateProjectDrawerProps {
   toggleDrawer: () => void;
 }
 
-const CreateProjectDrawerContent: FC<CreateProjectDrawerContentProps> = ({
+const CreateProjectDrawer: FC<CreateProjectDrawerProps> = ({
   toggleDrawer,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -36,8 +38,11 @@ const CreateProjectDrawerContent: FC<CreateProjectDrawerContentProps> = ({
     initialValues: {
       projectName: "",
       chainId: null,
+      description: "",
     },
   });
+
+  const addProject = useStore((state) => state.addProject);
 
   const handleSubmit = async (value: {
     projectName: string;
@@ -45,10 +50,12 @@ const CreateProjectDrawerContent: FC<CreateProjectDrawerContentProps> = ({
   }) => {
     setLoading(true);
     try {
-      await client.post("/projects", {
+      const { data } = await client.post("/projects", {
+        ...value,
         name: value.projectName,
-        chainId: value.chainId,
       });
+
+      addProject(data);
 
       showNotification({
         message: "Successfully Created Project",
@@ -81,6 +88,16 @@ const CreateProjectDrawerContent: FC<CreateProjectDrawerContentProps> = ({
           required
           size="md"
           {...form.getInputProps("projectName")}
+        />
+
+        <Textarea
+          label="Description"
+          placeholder="Description"
+          autosize
+          minRows={2}
+          maxRows={5}
+          {...form.getInputProps("description")}
+          required
         />
 
         <Select
@@ -154,4 +171,4 @@ const SelectItem = ({ label, isTestnet, ...others }: ItemProps, ref: any) => (
   </div>
 );
 
-export default CreateProjectDrawerContent;
+export default CreateProjectDrawer;
