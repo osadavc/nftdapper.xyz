@@ -40,3 +40,20 @@ export const createANewProject = async ({
 
   return project;
 };
+
+export const getProjectOfAUser = async ({
+  projectId,
+  ownerId,
+}: {
+  projectId: string;
+  ownerId: string;
+}) => {
+  const project = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      ownerId: ownerId,
+    },
+  });
+
+  return project;
+};

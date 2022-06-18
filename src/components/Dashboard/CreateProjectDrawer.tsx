@@ -129,9 +129,9 @@ const CreateProjectDrawer: FC<CreateProjectDrawerProps> = ({
               Wallet Address{" "}
               <Tooltip
                 label="Your Connected Wallet Address"
-                className="flex justify-center items-center"
+                className="flex items-center justify-center"
               >
-                <GrCircleInformation className="inline ml-2" />
+                <GrCircleInformation className="ml-2 inline" />
               </Tooltip>
             </p>
           }
@@ -142,7 +142,7 @@ const CreateProjectDrawer: FC<CreateProjectDrawerProps> = ({
       </div>
 
       <button
-        className="mt-6 w-full bg-black h-[40px] rounded-md text-white font-inter flex justify-center items-center disabled:opacity-90"
+        className="mt-6 flex h-[40px] w-full items-center justify-center rounded-md bg-black font-inter text-white disabled:opacity-90"
         type="submit"
         disabled={loading}
       >

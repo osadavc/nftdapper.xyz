@@ -5,7 +5,6 @@ import { Project } from "@prisma/client";
 import { FC, useEffect, useState } from "react";
 import useStore from "store";
 
-import Header from "components/Common/Header";
 import CreateProjectDrawerContent from "components/Dashboard/CreateProjectDrawer";
 import DashboardHeader from "components/Dashboard/DashboardHeader";
 import ProjectCard from "components/Dashboard/ProjectCard";
@@ -25,15 +24,12 @@ const Dashboard: FC<DashboardProps> = ({ projects: serverProjects }) => {
     useStore.setState({ projects: serverProjects });
   }, []);
 
-
   const toggleDrawer = () => {
     setIsNewProjectDrawerOpen((prevState) => !prevState);
   };
 
   return (
     <div className="font-inter">
-      <Header />
-
       <Drawer
         opened={isNewProjectDrawerOpen}
         onClose={toggleDrawer}
@@ -61,15 +57,15 @@ const Dashboard: FC<DashboardProps> = ({ projects: serverProjects }) => {
         <CreateProjectDrawerContent toggleDrawer={toggleDrawer} />
       </Drawer>
 
-      <div className="mx-auto max-w-6xl pt-10 px-4">
+      <div className="mx-auto max-w-6xl px-4 pt-10">
         <DashboardHeader toggleDrawer={toggleDrawer} />
 
         <div className="mt-7">
           {projects.length == 0 && (
-            <p className="text-center text-zinc-500 mt-10">
+            <p className="mt-10 text-center text-zinc-500">
               No Projects Created, Click{" "}
               <span
-                className="text-sky-500 font-medium cursor-pointer"
+                className="cursor-pointer font-medium text-sky-500"
                 onClick={toggleDrawer}
               >
                 Here

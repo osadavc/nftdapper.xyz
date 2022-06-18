@@ -1,13 +1,13 @@
-import { NextApiResponse } from "next";
+import {  NextApiResponse } from "next";
 
 import Cookies from "cookies";
 import nc from "next-connect";
 
 import {
-  auth,
-  onError,
-  onNoMatch,
-  NextApiRequestWithUser,
+   auth,
+   onError,
+   onNoMatch,
+   NextApiRequestWithUser,
 } from "utils/apiUtils";
 
 const handler = nc<NextApiRequestWithUser, NextApiResponse>({

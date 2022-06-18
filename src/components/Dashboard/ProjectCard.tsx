@@ -16,10 +16,10 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
 
   return (
     <Link href={`/dashboard/${project.id}`}>
-      <div className="w-full bg-gray-50 border hover:border-[#7880e7] rounded-md flex justify-between px-4 py-5 cursor-pointer">
+      <div className="flex w-full cursor-pointer justify-between rounded-md border bg-gray-50 px-4 py-5 hover:border-[#7880e7]">
         <div className="flex flex-col">
           <h2 className="font-inter font-medium">{project.name}</h2>
-          <p className="text-zinc-500 mt-[0.1rem]">{project.description}</p>
+          <p className="mt-[0.1rem] text-zinc-500">{project.description}</p>
         </div>
 
         <div className="flex items-center space-x-2">
@@ -27,7 +27,7 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
             <img
               src={chainInformation?.image}
               alt={`${project.name} Logo`}
-              className="rounded-full w-5 h-5"
+              className="h-5 w-5 rounded-full"
             />
           </Tooltip>
         </div>

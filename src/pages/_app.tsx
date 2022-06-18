@@ -9,6 +9,8 @@ import nProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { WagmiConfig, createClient } from "wagmi";
 
+import Header from "components/Common/Header";
+
 import "../styles/globals.css";
 
 const client = createClient({
@@ -56,6 +58,7 @@ const MyApp = ({ Component, pageProps: { user, ...pageProps } }: AppProps) => {
                 type="image/x-icon"
               />
             </Head>
+            <Header />
             <Component {...pageProps} />
           </WagmiConfig>
         </AuthProvider>
