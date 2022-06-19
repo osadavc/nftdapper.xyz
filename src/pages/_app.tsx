@@ -4,6 +4,7 @@ import Router from "next/router";
 
 import { MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
+
 import AuthProvider from "context/AuthContext";
 import nProgress from "nprogress";
 import "nprogress/nprogress.css";
@@ -12,6 +13,7 @@ import { WagmiConfig, createClient } from "wagmi";
 import Header from "components/Common/Header";
 
 import "../styles/globals.css";
+import WalletChecker from "components/Common/WalletChecker";
 
 const client = createClient({
   autoConnect: true,
@@ -50,7 +52,7 @@ const MyApp = ({ Component, pageProps: { user, ...pageProps } }: AppProps) => {
               <meta
                 name="description"
                 content="The Easiest Way To Kick Off Your NFT Collection Without
-               Code"
+                 Code"
               />
               <link
                 rel="shortcut icon"
@@ -59,6 +61,7 @@ const MyApp = ({ Component, pageProps: { user, ...pageProps } }: AppProps) => {
               />
             </Head>
             <Header />
+            <WalletChecker />
             <Component {...pageProps} />
           </WagmiConfig>
         </AuthProvider>
