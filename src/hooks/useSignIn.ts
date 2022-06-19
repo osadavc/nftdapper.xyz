@@ -51,9 +51,11 @@ const useSignIn = () => {
       ...notificationOptions,
     });
 
+    let accountAddress;
+
     try {
       if (!account?.address) {
-        await connect();
+        accountAddress = (await connect()).account;
       }
       updateNotification({
         message: "Sign The Message In Metamask To Continue",
@@ -66,7 +68,7 @@ const useSignIn = () => {
         message: "Signing In...",
       });
       await client.post("/auth/signIn", {
-        walletAddress: account?.address,
+        walletAddress: accountAddress || account?.address,
         signature: signedMessage,
       });
       hideNotification("sign-in-notification");

@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 
 import { Project } from "@prisma/client";
 import { FC, useEffect } from "react";
@@ -16,15 +17,26 @@ interface SingleProjectProps {
 }
 
 const SingleProject: FC<SingleProjectProps> = ({ project }) => {
+  const router = useRouter();
+
   useEffect(() => {
     useStore.setState({ openedProject: project });
+
+    return () => {
+      useStore.setState({ openedProject: null });
+    };
   }, [project]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 pt-10 font-inter">
-      <div className="mt-2 mb-4 flex cursor-pointer items-center space-x-2 text-sm text-zinc-500 transition-colors hover:text-[#6066b9]">
+      <div
+        className="mt-2 mb-4 flex cursor-pointer items-center space-x-2 text-sm text-zinc-500 transition-colors hover:text-[#6066b9]"
+        onClick={() => {
+          router.back();
+        }}
+      >
         <TbArrowNarrowLeft className="text-base" />
-        <p>Go Back To Projects</p>
+        <p>Go Back</p>
       </div>
 
       <ProjectInfo project={project} />
