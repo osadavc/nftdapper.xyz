@@ -6,6 +6,8 @@
     "nprogress",
     "Pausable",
     "Solana",
+    "startcase",
+    "tolower",
     "trivago",
     "zustand"
   ]

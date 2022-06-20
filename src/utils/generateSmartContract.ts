@@ -1,4 +1,5 @@
-import capitalize from "lodash.capitalize";
+import startCase from "lodash.startcase";
+import toLower from "lodash.tolower";
 import { SmartContractFeatures as ContractFeatures } from "@prisma/client";
 
 type SmartContractFeatures = Omit<ContractFeatures, "id" | "smartContractId">;
@@ -8,8 +9,8 @@ interface GenerateSmartContractOptions {
   tokenSymbol: string;
   features: SmartContractFeatures;
   maxSupply: number;
-  price: string;
-  saleStartTime: number;
+  price?: string;
+  saleStartTime?: number;
 }
 
 export const generateSmartContract = ({
@@ -45,25 +46,28 @@ ${
     : ""
 }
 
-contract ${capitalize(tokenName)} is ERC721A, Ownable ${
-    features.pausable ? ", Pausable" : ""
-  } {
-  constructor() ERC721A("${capitalize(
-    tokenName
+contract ${startCase(toLower(tokenName)).replaceAll(
+    " ",
+    ""
+  )} is ERC721A, Ownable ${features.pausable ? ", Pausable" : ""} {
+  constructor() ERC721A("${startCase(toLower(tokenName)).replaceAll(
+    " ",
+    ""
   )}", "${tokenSymbol.toUpperCase()}") {}
-}
+
 
 uint256 public maxSupply = ${maxSupply};
 ${features.paidMint ? `uint256 public price = ${price};` : ""}
 ${
   features.saleStartingTime
-    ? `uint256 public saleStartingTime = ${saleStartTime};`
+    ? `uint256 public saleStartingTime = ${saleStartTime};
+    `
     : ""
 }
-
-
 modifier mintCompliance(${features.mintMultiple ? "uint256 _mintAmount" : ""}) {
-  require(totalSupply() + _mintAmount <= maxSupply, "Max supply exceeded!");
+  require(totalSupply() + ${
+    features.mintMultiple ? "_mintAmount" : "1"
+  } <= maxSupply, "Max supply exceeded!");
   require(tx.origin == msg.sender, "The caller is another contract");
 
   ${
@@ -73,7 +77,7 @@ modifier mintCompliance(${features.mintMultiple ? "uint256 _mintAmount" : ""}) {
   }
 
   ${
-    features.maxMintCount
+    features.maxMintCount && features.mintMultiple
       ? `
   require(
     _mintAmount > 0 &&
@@ -81,12 +85,12 @@ modifier mintCompliance(${features.mintMultiple ? "uint256 _mintAmount" : ""}) {
       _numberMinted(msg.sender) + _mintAmount <= maxMintAmount,
     "Invalid mint amount!"
   );
+
   `
       : ""
   }
   _;
 }
-
 ${
   features.paidMint
     ? `
@@ -94,11 +98,10 @@ modifier mintPriceCompliance(uint256 _mintAmount) {
   require(msg.value >= (price * _mintAmount), "Insufficient funds!");
   _;
 }
+
 `
     : ""
 }
-
-
 ${
   features.pausable
     ? `
@@ -109,11 +112,10 @@ function pause() public onlyOwner {
 function unpause() public onlyOwner {
   _unpause();
 }
+
 `
     : ""
 }
-
-
 function mint(${features.mintMultiple ? "uint256 _tokenCount" : ""}) public ${
     features.paidMint ? "payable" : ""
   } ${features.pausable ? "whenNotPaused" : ""} mintCompliance(${
@@ -123,7 +125,18 @@ function mint(${features.mintMultiple ? "uint256 _tokenCount" : ""}) public ${
       ? `mintPriceCompliance(${features.mintMultiple ? "_tokenCount" : ""})`
       : ""
   } {
-  _mint(msg.sender${features.mintMultiple ? ", _tokenCount" : ""});
+  _mint(msg.sender, ${features.mintMultiple ? "_tokenCount" : "1"});
+}
+
+
+${
+  features.saleStartingTime
+    ? `
+function setSaleStartingTime(uint256 _saleStartingTime) external onlyOwner {
+  saleStartingTime = _saleStartingTime;
+}
+`
+    : ""
 }
 
 function _startTokenId() internal view virtual override returns (uint256) {
@@ -133,6 +146,8 @@ function _startTokenId() internal view virtual override returns (uint256) {
 function withdraw() external payable onlyOwner {
   (bool os, ) = payable(owner()).call{value: address(this).balance}("");
   require(os);
+}
+
 }
 
   `;
