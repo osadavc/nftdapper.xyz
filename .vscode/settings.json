@@ -4,6 +4,7 @@
     "BUIDL",
     "mantine",
     "nprogress",
+    "Pausable",
     "Solana",
     "trivago",
     "zustand"
