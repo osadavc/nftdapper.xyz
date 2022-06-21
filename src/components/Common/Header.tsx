@@ -2,7 +2,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { useUser } from "context/AuthContext";
-
 import useSignIn from "../../hooks/useSignIn";
 
 const Header = () => {
@@ -20,7 +19,6 @@ const Header = () => {
           <h3>NFT Dapper</h3>
         </div>
       </Link>
-
       <div>
         {user && !isDashboard ? (
           <Link href="/dashboard" passHref>

@@ -29,10 +29,14 @@ const MyApp = ({ Component, pageProps: { user, ...pageProps } }: AppProps) => {
       theme={{
         colors: {
           main: [
-            "#2a3192",
+            "#545aa2",
             "#545aa2",
             "#484d8b",
+            "#484d8b",
             "#3c4074",
+            "#3c4074",
+            "#7880e7",
+            "#2a3192",
             "#7880e7",
             "#6066b9",
           ],

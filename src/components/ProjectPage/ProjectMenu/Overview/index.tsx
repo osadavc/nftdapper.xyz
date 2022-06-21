@@ -5,7 +5,7 @@ const Overview = () => {
   const openedProject = useStore((state) => state.openedProject);
 
   return (
-    <div className="mt-5">
+    <div className="mt-3 px-6">
       <div className="mb-3">
         <p className="text-center text-sm text-gray-500">
           Go through above steps to setup your NFT drop. After setting it up,

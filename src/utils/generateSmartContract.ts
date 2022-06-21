@@ -11,6 +11,7 @@ interface GenerateSmartContractOptions {
   maxSupply: number;
   price?: string;
   saleStartTime?: number;
+  maxNumberOfTokens?: number;
 }
 
 export const generateSmartContract = ({
@@ -20,6 +21,7 @@ export const generateSmartContract = ({
   maxSupply,
   price,
   saleStartTime,
+  maxNumberOfTokens,
 }: GenerateSmartContractOptions) => {
   if (!maxSupply) {
     throw new Error("maxSupply is required");
@@ -33,9 +35,11 @@ export const generateSmartContract = ({
     throw new Error("Sale start time is required for sale");
   }
 
-  return `
+  if (!maxNumberOfTokens && features.mintMultiple) {
+    throw new Error("Max number of tokens is required for max mint count");
+  }
 
-//SPDX-License-Identifier: MIT
+  const code = `//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
 import "erc721a/contracts/ERC721A.sol";
@@ -50,73 +54,79 @@ contract ${startCase(toLower(tokenName)).replaceAll(
     " ",
     ""
   )} is ERC721A, Ownable ${features.pausable ? ", Pausable" : ""} {
+    
   constructor() ERC721A("${startCase(toLower(tokenName)).replaceAll(
     " ",
     ""
   )}", "${tokenSymbol.toUpperCase()}") {}
 
 
-uint256 public maxSupply = ${maxSupply};
-${features.paidMint ? `uint256 public price = ${price};` : ""}
-${
-  features.saleStartingTime
-    ? `uint256 public saleStartingTime = ${saleStartTime};
-    `
-    : ""
-}
-modifier mintCompliance(${features.mintMultiple ? "uint256 _mintAmount" : ""}) {
-  require(totalSupply() + ${
-    features.mintMultiple ? "_mintAmount" : "1"
-  } <= maxSupply, "Max supply exceeded!");
-  require(tx.origin == msg.sender, "The caller is another contract");
-
+  uint256 public maxSupply = ${maxSupply};
+  ${features.paidMint ? `uint256 public price = ${price};` : ""}
   ${
     features.saleStartingTime
-      ? 'require(saleStartingTime < block.timestamp, "Sale has not started yet");'
+      ? `uint256 public saleStartingTime = ${saleStartTime};`
       : ""
   }
+   ${
+     features.mintMultiple
+       ? `uint256 public maxMintAmount = ${maxNumberOfTokens};
+   `
+       : ""
+   }
+  modifier mintCompliance(${
+    features.mintMultiple ? "uint256 _mintAmount" : ""
+  }) {
+    require(totalSupply() + ${
+      features.mintMultiple ? "_mintAmount" : "1"
+    } <= maxSupply, "Max supply exceeded!");
+    require(tx.origin == msg.sender, "The caller is another contract");
 
+    ${
+      features.saleStartingTime
+        ? 'require(saleStartingTime < block.timestamp, "Sale has not started yet");'
+        : ""
+    }
+
+    ${
+      features.mintMultiple && features.mintMultiple
+        ? `
+    require(
+      _mintAmount > 0 &&
+        _mintAmount <= maxMintAmount &&
+        _numberMinted(msg.sender) + _mintAmount <= maxMintAmount,
+      "Invalid mint amount!"
+    );
+
+    `
+        : ""
+    }_;
+  }
   ${
-    features.maxMintCount && features.mintMultiple
+    features.paidMint
       ? `
-  require(
-    _mintAmount > 0 &&
-      _mintAmount <= maxMintAmount &&
-      _numberMinted(msg.sender) + _mintAmount <= maxMintAmount,
-    "Invalid mint amount!"
-  );
+  modifier mintPriceCompliance(uint256 _mintAmount) {
+    require(msg.value >= (price * _mintAmount), "Insufficient funds!");
+    _;
+  }
 
   `
       : ""
   }
-  _;
-}
-${
-  features.paidMint
-    ? `
-modifier mintPriceCompliance(uint256 _mintAmount) {
-  require(msg.value >= (price * _mintAmount), "Insufficient funds!");
-  _;
-}
+  ${
+    features.pausable
+      ? `function pause() public onlyOwner {
+    _pause();
+  }
 
-`
-    : ""
-}
-${
-  features.pausable
-    ? `
-function pause() public onlyOwner {
-  _pause();
-}
+  function unpause() public onlyOwner {
+    _unpause();
+  }
 
-function unpause() public onlyOwner {
-  _unpause();
-}
-
-`
-    : ""
-}
-function mint(${features.mintMultiple ? "uint256 _tokenCount" : ""}) public ${
+  `
+      : ""
+  }
+  function mint(${features.mintMultiple ? "uint256 _tokenCount" : ""}) public ${
     features.paidMint ? "payable" : ""
   } ${features.pausable ? "whenNotPaused" : ""} mintCompliance(${
     features.mintMultiple ? "_tokenCount" : ""
@@ -125,30 +135,28 @@ function mint(${features.mintMultiple ? "uint256 _tokenCount" : ""}) public ${
       ? `mintPriceCompliance(${features.mintMultiple ? "_tokenCount" : ""})`
       : ""
   } {
-  _mint(msg.sender, ${features.mintMultiple ? "_tokenCount" : "1"});
-}
+    _mint(msg.sender, ${features.mintMultiple ? "_tokenCount" : "1"});
+  }
+  ${
+    features.saleStartingTime
+      ? `
+  function setSaleStartingTime(uint256 _saleStartingTime) external onlyOwner {
+    saleStartingTime = _saleStartingTime;
+  }
+  `
+      : ""
+  }
 
+  function _startTokenId() internal view virtual override returns (uint256) {
+    return 1;
+  }
 
-${
-  features.saleStartingTime
-    ? `
-function setSaleStartingTime(uint256 _saleStartingTime) external onlyOwner {
-  saleStartingTime = _saleStartingTime;
-}
-`
-    : ""
-}
+  function withdraw() external payable onlyOwner {
+    (bool os, ) = payable(owner()).call{value: address(this).balance}("");
+    require(os);
+  }
 
-function _startTokenId() internal view virtual override returns (uint256) {
-  return 1;
-}
+}`;
 
-function withdraw() external payable onlyOwner {
-  (bool os, ) = payable(owner()).call{value: address(this).balance}("");
-  require(os);
-}
-
-}
-
-  `;
+  return code;
 };

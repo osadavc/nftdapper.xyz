@@ -1,9 +1,12 @@
 import { Tabs } from "@mantine/core";
+import useStore from "store";
 
 import Overview from "./Overview";
 import SmartContract from "./SmartContract";
 
 const ProjectMenu = () => {
+  const openedProject = useStore((state) => state.openedProject);
+
   return (
     <Tabs
       styles={{
@@ -20,7 +23,10 @@ const ProjectMenu = () => {
         <SmartContract />
       </Tabs.Tab>
 
-      <Tabs.Tab label="Images and Metadata" disabled>
+      <Tabs.Tab
+        label="Images and Metadata"
+        disabled={!openedProject?.smartContractId}
+      >
         Messages tab content
       </Tabs.Tab>
 
