@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@mantine/core": "^4.2.9",
+    "@mantine/dates": "^4.2.10",
     "@mantine/form": "^4.2.9",
     "@mantine/hooks": "^4.2.9",
     "@mantine/next": "^4.2.9",
@@ -15,6 +16,7 @@
     "@prisma/client": "^3.15.1",
     "axios": "^0.27.2",
     "cookies": "^0.8.0",
+    "dayjs": "^1.11.3",
     "ethers": "^5.6.8",
     "jsonwebtoken": "^8.5.1",
     "lodash.startcase": "^4.4.0",
@@ -31,7 +33,6 @@
     "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
-    "prettier": "^2.7.1",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/cookies": "^0.7.7",
     "@types/jsonwebtoken": "^8.5.8",
@@ -45,6 +46,7 @@
     "eslint": "8.17.0",
     "eslint-config-next": "12.1.6",
     "postcss": "^8.4.14",
+    "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.11",
     "prisma": "^3.15.1",
     "tailwindcss": "^3.1.2",

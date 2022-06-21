@@ -1,6 +1,8 @@
 import { Checkbox, TextInput } from "@mantine/core";
 import useStore from "store";
 import { useForm } from "@mantine/form";
+import DateTimePicker from "components/Common/DateTimePicker";
+import { useNotifications } from "@mantine/notifications";
 
 const checkboxStyles = {
   label: {
@@ -11,7 +13,7 @@ const checkboxStyles = {
   },
 };
 
-const inputStyles = {
+export const inputStyles = {
   label: {
     fontSize: "14px",
     fontFamily: "Inter",
@@ -23,12 +25,40 @@ const SmartContract = () => {
   const openedProject = useStore((state) => state.openedProject);
   const form = useForm({
     initialValues: {
+      collectionName: "",
+      collectionSymbol: "",
       pausable: false,
       saleStartingTime: false,
       mintMultiple: false,
       paidMint: false,
+      maxNumber: null,
+      mintFee: null,
+      saleStartingTimeInput: null,
     },
   });
+
+  const notification = useNotifications();
+
+  const showErrorMessage = () => {
+    notification.showNotification({
+      message: "Please fill all fields",
+      color: "red",
+    });
+  };
+
+  const handleSubmit = (value: typeof form.values) => {
+    if (value.saleStartingTime && !value.saleStartingTimeInput) {
+      return showErrorMessage();
+    }
+
+    if (value.mintMultiple && !value.maxNumber) {
+      return showErrorMessage();
+    }
+
+    if (value.paidMint && !value.mintFee) {
+      return showErrorMessage();
+    }
+  };
 
   return (
     <div className="mt-3 px-6">
@@ -53,7 +83,10 @@ const SmartContract = () => {
         {openedProject?.smartContractId ? (
           <></>
         ) : (
-          <form className="flex">
+          <form
+            className="flex flex-col space-y-10  md:flex-row md:space-y-0"
+            onSubmit={form.onSubmit(handleSubmit)}
+          >
             <div className="w-full">
               <h2 className="font-nunito text-xl font-bold">Features</h2>
               <div className="mt-5 space-y-3">
@@ -85,7 +118,10 @@ const SmartContract = () => {
                 />
               </div>
 
-              <button className="mt-10 flex items-center justify-center space-x-2 rounded-md bg-black py-2 px-4 text-white transition-shadow hover:shadow-sm disabled:opacity-75">
+              <button
+                className="mt-10 flex items-center justify-center space-x-2 rounded-md bg-black py-2 px-4 text-white transition-shadow hover:shadow-sm disabled:opacity-75"
+                type="submit"
+              >
                 Deploy Contract 🚀
               </button>
             </div>
@@ -101,6 +137,24 @@ const SmartContract = () => {
                 </p>
 
                 <div className="mt-5 space-y-3">
+                  <TextInput
+                    placeholder="Collection Name"
+                    label="Collection Name"
+                    required
+                    size="md"
+                    styles={inputStyles}
+                    {...form.getInputProps("collectionName")}
+                  />
+
+                  <TextInput
+                    placeholder="Collection Symbol"
+                    label="Collection Symbol (eg: BAYC)"
+                    required
+                    size="md"
+                    styles={inputStyles}
+                    {...form.getInputProps("collectionSymbol")}
+                  />
+
                   {form.values.mintMultiple && (
                     <TextInput
                       placeholder="Max Number Of NFTs One Wallet Can Mint"
@@ -109,6 +163,7 @@ const SmartContract = () => {
                       required
                       size="md"
                       styles={inputStyles}
+                      {...form.getInputProps("maxNumber")}
                     />
                   )}
 
@@ -120,9 +175,21 @@ const SmartContract = () => {
                       required
                       size="md"
                       styles={inputStyles}
+                      {...form.getInputProps("mintFee")}
+                      onSubmit={form.onSubmit(handleSubmit)}
                     />
                   )}
                 </div>
+
+                {form.values.saleStartingTime && (
+                  <DateTimePicker
+                    // @ts-ignore
+                    label="Public Sale Starting Time"
+                    placeholder="Public Sale Starting Time"
+                    inputFormat={"DD-MMM-YYYY hh:mm a"}
+                    {...form.getInputProps("saleStartingTimeInput")}
+                  />
+                )}
               </div>
             </div>
           </form>

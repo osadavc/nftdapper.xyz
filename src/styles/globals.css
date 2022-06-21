@@ -15,3 +15,10 @@
 #nprogress .peg {
   box-shadow: 0 0 10px #2a3192, 0 0 5px #2a3192 !important;
 }
+
+div.mantine-DateTimePicker-root.mantine-132j1wl > label {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 12px;
+}
