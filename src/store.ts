@@ -1,5 +1,16 @@
-import { Project } from "@prisma/client";
+import { Chain, SmartContract, User } from "@prisma/client";
 import create from "zustand";
+
+interface Project {
+  ownerId: string;
+  name: string;
+  chainId: Chain;
+  description: string | null;
+  id: string;
+  smartContractId: string | null;
+  owner: User;
+  smartContract: SmartContract | null;
+}
 
 interface Store {
   projects: Project[];

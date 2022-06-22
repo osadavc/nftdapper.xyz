@@ -32,11 +32,14 @@ enum Chain {
 }
 
 model SmartContract {
-  id              String                  @id @default(cuid())
-  contractAddress String?
-  abi             String?
-  features        SmartContractFeatures[]
-  Project         Project[]
+  id               String                  @id @default(cuid())
+  contractAddress  String?
+  abi              String?
+  features         SmartContractFeatures[]
+  Project          Project[]
+  saleStartingTime String?
+  mintFee          Float?
+  maxMintAmount    Int?
 }
 
 model SmartContractFeatures {

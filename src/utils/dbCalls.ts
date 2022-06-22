@@ -1,4 +1,4 @@
-import { Chain } from "@prisma/client";
+import { Chain, SmartContractFeatures } from "@prisma/client";
 
 import prisma from "./prisma";
 
@@ -58,4 +58,67 @@ export const getProjectOfAUser = async ({
   return project;
 };
 
-export const saveDraftProject = () => {};
+type ContractFeatures = Omit<SmartContractFeatures, "id" | "smartContractId">;
+
+export const saveDraftProject = async ({
+  projectId,
+  ownerId,
+  abi,
+  features,
+  maxMintAmount,
+  mintFee,
+  saleStartingTime,
+}: {
+  projectId: string;
+  ownerId: string;
+  abi: string;
+  features: ContractFeatures;
+  maxMintAmount?: number;
+  mintFee?: number;
+  saleStartingTime?: number;
+}) => {
+  const fetchedProject = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      ownerId: ownerId,
+    },
+    select: {
+      smartContract: true,
+      chainId: true,
+      name: true,
+      description: true,
+      id: true,
+      ownerId: true,
+      owner: true,
+      smartContractId: true,
+    },
+  });
+
+  if (!fetchedProject) {
+    throw new Error("Project not found");
+  }
+
+  const project = await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      smartContract: {
+        create: {
+          abi,
+          features: {
+            create: features,
+          },
+          maxMintAmount,
+          mintFee,
+          saleStartingTime: saleStartingTime?.toString(),
+        },
+      },
+    },
+    select: {
+      smartContract: true,
+    },
+  });
+
+  return project;
+};

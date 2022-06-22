@@ -11,6 +11,7 @@ import {
   NextApiRequestWithUser,
 } from "utils/apiUtils";
 import { generateSmartContract } from "utils/generateSmartContract";
+import { saveDraftProject } from "utils/dbCalls";
 
 const openzeppelinPath = path.join(
   "node_modules",
@@ -47,7 +48,12 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
   onNoMatch,
 })
   .use(auth)
-  .post((req, res) => {
+  .post(async (req, res) => {
+    const { id } = req.query;
+
+    if (typeof id !== "string") {
+      return res.status(400).json({ message: "invalid project id" });
+    }
     interface RequestBody {
       collectionName: string;
       collectionSymbol: string;
@@ -106,6 +112,22 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
       abi: output.contracts["contract.sol"][name].abi,
       bytecode: output.contracts["contract.sol"][name].evm.bytecode.object,
     };
+
+    await saveDraftProject({
+      projectId: id,
+      ownerId: req.user.id,
+      abi: JSON.stringify(deployerInfo.abi),
+      features: {
+        delayedReveal: false,
+        mintMultiple: body.mintMultiple,
+        paidMint: body.paidMint,
+        pausable: body.pausable,
+        saleStartingTime: body.saleStartingTime,
+      },
+      maxMintAmount: body.maxNumber,
+      mintFee: body.mintFee,
+      saleStartingTime: body.saleStartingTimeInput,
+    });
 
     res.status(200).send(deployerInfo);
   });

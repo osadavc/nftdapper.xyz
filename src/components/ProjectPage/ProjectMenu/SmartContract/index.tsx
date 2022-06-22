@@ -27,7 +27,7 @@ const SmartContract = () => {
   const openedProject = useStore((state) => state.openedProject);
   const form = useForm({
     initialValues: {
-      collectionName: "",
+      collectionName: openedProject?.name,
       collectionSymbol: "",
       totalSupply: "",
       pausable: false,
@@ -63,33 +63,42 @@ const SmartContract = () => {
       return showErrorMessage();
     }
 
-    const { data } = await client.post(
+    const { data: contractInfo } = await client.post(
       `/projects/${openedProject?.id}/contracts`,
       value
     );
 
-    console.log(data);
-
     const provider = new ethers.providers.Web3Provider(window.ethereum as any);
     const signer = provider.getSigner();
 
-    const factory = new ethers.ContractFactory(data.abi, data.bytecode, signer);
+    const factory = new ethers.ContractFactory(
+      contractInfo.abi,
+      contractInfo.bytecode,
+      signer
+    );
     const contract = await factory.deploy();
     await contract.deployed();
+
+    await client.post(
+      `/projects/${openedProject?.id}/contracts/${contractInfo.id}/updateAddress`,
+      {
+        address: contract.address,
+      }
+    );
   };
 
   return (
     <div className="mt-3 px-6">
       <div className="mb-3 flex flex-col">
         <p className="text-center text-sm text-gray-500">
-          {openedProject?.smartContractId
+          {openedProject?.smartContract?.contractAddress
             ? `Smart Contract is deployed successfully. You can interact with your contract here. `
             : `Time to generate your smart contract on demand. Select the features
           that you need to be in your smart contract and fill in all the
           information that it required and click the Generate button.`}
         </p>
 
-        {!openedProject?.smartContractId && (
+        {!openedProject?.smartContract?.contractAddress && (
           <span className="mt-2 text-center text-xs text-red-500">
             Please note that you can&apos;t add or remove features after the
             deployment
@@ -98,11 +107,11 @@ const SmartContract = () => {
       </div>
 
       <div className="mt-16">
-        {openedProject?.smartContractId ? (
+        {openedProject?.smartContract?.contractAddress ? (
           <></>
         ) : (
           <form
-            className="flex flex-col space-y-10  md:flex-row md:space-y-0"
+            className="flex flex-col md:flex-row"
             onSubmit={form.onSubmit(handleSubmit)}
           >
             <div className="w-full">
@@ -218,6 +227,8 @@ const SmartContract = () => {
                     {...form.getInputProps("saleStartingTimeInput")}
                   />
                 )}
+
+                <div className="h-10"></div>
               </div>
             </div>
           </form>
