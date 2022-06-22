@@ -1,3 +1,3 @@
 declare module "solc" {
-  function compile(input: string): any;
+  function compile(...any: any): any;
 }

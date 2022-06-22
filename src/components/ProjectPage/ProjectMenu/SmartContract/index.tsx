@@ -3,6 +3,8 @@ import useStore from "store";
 import { useForm } from "@mantine/form";
 import DateTimePicker from "components/Common/DateTimePicker";
 import { useNotifications } from "@mantine/notifications";
+import client from "utils/apiClient";
+import { ethers } from "ethers";
 
 const checkboxStyles = {
   label: {
@@ -27,6 +29,7 @@ const SmartContract = () => {
     initialValues: {
       collectionName: "",
       collectionSymbol: "",
+      totalSupply: "",
       pausable: false,
       saleStartingTime: false,
       mintMultiple: false,
@@ -34,6 +37,7 @@ const SmartContract = () => {
       maxNumber: null,
       mintFee: null,
       saleStartingTimeInput: null,
+      maxSupply: null,
     },
   });
 
@@ -46,7 +50,7 @@ const SmartContract = () => {
     });
   };
 
-  const handleSubmit = (value: typeof form.values) => {
+  const handleSubmit = async (value: typeof form.values) => {
     if (value.saleStartingTime && !value.saleStartingTimeInput) {
       return showErrorMessage();
     }
@@ -58,6 +62,20 @@ const SmartContract = () => {
     if (value.paidMint && !value.mintFee) {
       return showErrorMessage();
     }
+
+    const { data } = await client.post(
+      `/projects/${openedProject?.id}/contracts`,
+      value
+    );
+
+    console.log(data);
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum as any);
+    const signer = provider.getSigner();
+
+    const factory = new ethers.ContractFactory(data.abi, data.bytecode, signer);
+    const contract = await factory.deploy();
+    await contract.deployed();
   };
 
   return (
@@ -126,7 +144,7 @@ const SmartContract = () => {
               </button>
             </div>
 
-            <div className="w-full">
+            <div className="w-full pb-10 md:pb-0">
               <h2 className="font-nunito text-xl font-bold">Inputs</h2>
 
               <div className="mt-5">
@@ -153,6 +171,16 @@ const SmartContract = () => {
                     size="md"
                     styles={inputStyles}
                     {...form.getInputProps("collectionSymbol")}
+                  />
+
+                  <TextInput
+                    placeholder="Total Supply"
+                    label="Total Supply (eg: 10,000)"
+                    required
+                    size="md"
+                    styles={inputStyles}
+                    type="number"
+                    {...form.getInputProps("maxSupply")}
                   />
 
                   {form.values.mintMultiple && (

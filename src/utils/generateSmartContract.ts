@@ -9,7 +9,7 @@ interface GenerateSmartContractOptions {
   tokenSymbol: string;
   features: SmartContractFeatures;
   maxSupply: number;
-  price?: string;
+  price?: number;
   saleStartTime?: number;
   maxNumberOfTokens?: number;
 }
@@ -62,10 +62,12 @@ contract ${startCase(toLower(tokenName)).replaceAll(
 
 
   uint256 public maxSupply = ${maxSupply};
-  ${features.paidMint ? `uint256 public price = ${price};` : ""}
+  ${features.paidMint ? `uint256 public price = ${price} ether;` : ""}
   ${
     features.saleStartingTime
-      ? `uint256 public saleStartingTime = ${saleStartTime};`
+      ? `uint256 public saleStartingTime = ${new Date(
+          saleStartTime!
+        ).getTime()};`
       : ""
   }
    ${
@@ -87,7 +89,6 @@ contract ${startCase(toLower(tokenName)).replaceAll(
         ? 'require(saleStartingTime < block.timestamp, "Sale has not started yet");'
         : ""
     }
-
     ${
       features.mintMultiple && features.mintMultiple
         ? `
@@ -96,9 +97,7 @@ contract ${startCase(toLower(tokenName)).replaceAll(
         _mintAmount <= maxMintAmount &&
         _numberMinted(msg.sender) + _mintAmount <= maxMintAmount,
       "Invalid mint amount!"
-    );
-
-    `
+    );`
         : ""
     }_;
   }
@@ -108,9 +107,7 @@ contract ${startCase(toLower(tokenName)).replaceAll(
   modifier mintPriceCompliance(uint256 _mintAmount) {
     require(msg.value >= (price * _mintAmount), "Insufficient funds!");
     _;
-  }
-
-  `
+  }`
       : ""
   }
   ${
@@ -158,5 +155,5 @@ contract ${startCase(toLower(tokenName)).replaceAll(
 
 }`;
 
-  return code;
+  return { code, name: startCase(toLower(tokenName)).replaceAll(" ", "") };
 };

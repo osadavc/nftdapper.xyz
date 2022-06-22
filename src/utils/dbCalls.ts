@@ -57,3 +57,5 @@ export const getProjectOfAUser = async ({
 
   return project;
 };
+
+export const saveDraftProject = () => {};
