@@ -180,7 +180,7 @@ const DateTimePicker = forwardRef(
         shadow={shadow}
         transitionDuration={transitionDuration}
         ref={useMergedRef(ref, inputRef)}
-        size={size}
+        size="md"
         styles={styles}
         classNames={classNames}
         onChange={handleChange}
@@ -226,7 +226,6 @@ const DateTimePicker = forwardRef(
           allowLevelChange={allowLevelChange}
           initialLevel={initialLevel}
           mb="sm"
-          
         />
 
         <Group align="center">

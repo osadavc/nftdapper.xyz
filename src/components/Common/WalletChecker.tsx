@@ -17,6 +17,14 @@ const WalletChecker = () => {
       return;
     }
 
+    window.ethereum &&
+      window.ethereum.on &&
+      window.ethereum.on("accountsChanged", function (accounts: string[]) {
+        if (accounts.length == 0) {
+          signOut();
+        }
+      });
+
     (async () => {
       try {
         if (!account?.address) {
