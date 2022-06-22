@@ -1,7 +1,7 @@
 import { Chain, SmartContract, User } from "@prisma/client";
 import create from "zustand";
 
-interface Project {
+export interface Project {
   ownerId: string;
   name: string;
   chainId: Chain;
@@ -15,6 +15,7 @@ interface Project {
 interface Store {
   projects: Project[];
   addProject: (project: Project) => void;
+  replaceProject: (project: Project) => void;
   openedProject: Project | null;
 }
 
@@ -23,6 +24,7 @@ const useStore = create<Store>((set, get) => ({
   addProject: (project) =>
     set(() => ({ projects: [...get().projects, project] })),
   openedProject: null,
+  replaceProject: (project) => set(() => ({ openedProject: project })),
 }));
 
 export default useStore;

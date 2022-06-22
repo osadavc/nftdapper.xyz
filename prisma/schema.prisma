@@ -15,12 +15,12 @@ model User {
 
 model Project {
   id              String         @id @default(cuid())
-  name            String         @unique
+  name            String
   description     String?
-  owner           User           @relation(fields: [ownerId], references: [id])
+  owner           User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId         String
   chainId         Chain
-  smartContract   SmartContract? @relation(fields: [smartContractId], references: [id])
+  smartContract   SmartContract? @relation(fields: [smartContractId], references: [id], onDelete: Cascade)
   smartContractId String?
 }
 
@@ -44,7 +44,7 @@ model SmartContract {
 
 model SmartContractFeatures {
   id              String        @id @default(cuid())
-  smartContract   SmartContract @relation(fields: [smartContractId], references: [id])
+  smartContract   SmartContract @relation(fields: [smartContractId], references: [id], onDelete: Cascade)
   smartContractId String
 
   delayedReveal    Boolean

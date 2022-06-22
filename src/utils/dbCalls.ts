@@ -2,6 +2,17 @@ import { Chain, SmartContractFeatures } from "@prisma/client";
 
 import prisma from "./prisma";
 
+const select = {
+  chainId: true,
+  description: true,
+  name: true,
+  id: true,
+  ownerId: true,
+  owner: true,
+  smartContract: true,
+  smartContractId: true,
+};
+
 export const getAllProjectsFromAUser = async (userId: string) => {
   const projects = await prisma.project.findMany({
     where: {
@@ -53,6 +64,7 @@ export const getProjectOfAUser = async ({
       id: projectId,
       ownerId: ownerId,
     },
+    select,
   });
 
   return project;
@@ -82,16 +94,6 @@ export const saveDraftProject = async ({
       id: projectId,
       ownerId: ownerId,
     },
-    select: {
-      smartContract: true,
-      chainId: true,
-      name: true,
-      description: true,
-      id: true,
-      ownerId: true,
-      owner: true,
-      smartContractId: true,
-    },
   });
 
   if (!fetchedProject) {
@@ -104,7 +106,7 @@ export const saveDraftProject = async ({
     },
     data: {
       smartContract: {
-        create: {
+        update: {
           abi,
           features: {
             create: features,
@@ -118,6 +120,43 @@ export const saveDraftProject = async ({
     select: {
       smartContract: true,
     },
+  });
+
+  return project;
+};
+
+export const updateAddress = async ({
+  projectId,
+  ownerId,
+  address,
+}: {
+  projectId: string;
+  ownerId: string;
+  address: string;
+}) => {
+  const fetchedProject = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      ownerId: ownerId,
+    },
+  });
+
+  if (!fetchedProject) {
+    throw new Error("Project not found");
+  }
+
+  const project = await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      smartContract: {
+        update: {
+          contractAddress: address,
+        },
+      },
+    },
+    select,
   });
 
   return project;

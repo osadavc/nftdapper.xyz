@@ -1,10 +1,11 @@
-import { Checkbox, TextInput } from "@mantine/core";
+import { Checkbox, Loader, TextInput } from "@mantine/core";
 import useStore from "store";
 import { useForm } from "@mantine/form";
 import DateTimePicker from "components/Common/DateTimePicker";
 import { useNotifications } from "@mantine/notifications";
 import client from "utils/apiClient";
 import { ethers } from "ethers";
+import { useState } from "react";
 
 const checkboxStyles = {
   label: {
@@ -24,7 +25,10 @@ export const inputStyles = {
 };
 
 const SmartContract = () => {
+  const [loading, setLoading] = useState(false);
+
   const openedProject = useStore((state) => state.openedProject);
+  const replaceProject = useStore((state) => state.replaceProject);
   const form = useForm({
     initialValues: {
       collectionName: openedProject?.name,
@@ -63,8 +67,10 @@ const SmartContract = () => {
       return showErrorMessage();
     }
 
+    setLoading(true);
+
     const { data: contractInfo } = await client.post(
-      `/projects/${openedProject?.id}/contracts`,
+      `/projects/${openedProject?.id}/contract`,
       value
     );
 
@@ -79,12 +85,17 @@ const SmartContract = () => {
     const contract = await factory.deploy();
     await contract.deployed();
 
-    await client.post(
-      `/projects/${openedProject?.id}/contracts/${contractInfo.id}/updateAddress`,
+    const { data } = await client.post(
+      `/projects/${openedProject?.id}/contract/updateAddress`,
       {
         address: contract.address,
       }
     );
+
+    console.log(data);
+
+    replaceProject(data);
+    setLoading(false);
   };
 
   return (
@@ -146,10 +157,16 @@ const SmartContract = () => {
               </div>
 
               <button
-                className="mt-10 flex items-center justify-center space-x-2 rounded-md bg-black py-2 px-4 text-white transition-shadow hover:shadow-sm disabled:opacity-75"
+                className="mt-10 flex h-[40px] w-[200px] items-center justify-center space-x-2 rounded-md bg-black py-2 px-4 text-white transition-shadow hover:shadow-sm disabled:opacity-75"
                 type="submit"
               >
-                Deploy Contract 🚀
+                {loading ? (
+                  <div className="flex items-center justify-center space-x-2 font-inter">
+                    <Loader color="white" size="sm" /> <p>Working ...</p>
+                  </div>
+                ) : (
+                  <p>Deploy Contract 🚀</p>
+                )}{" "}
               </button>
             </div>
 

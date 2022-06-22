@@ -1,14 +1,13 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 
-import { Project } from "@prisma/client";
 import { FC, useEffect, useState } from "react";
 import { TbArrowNarrowLeft } from "react-icons/tb";
 
 import ProjectInfo from "components/ProjectPage/ProjectInfo";
 import ProjectMenu from "components/ProjectPage/ProjectMenu";
 
-import useStore from "store";
+import useStore, { Project } from "store";
 import { getUser } from "utils/apiUtils";
 import { getProjectOfAUser } from "utils/dbCalls";
 
@@ -23,6 +22,8 @@ const SingleProject: FC<SingleProjectProps> = ({ project }) => {
   const router = useRouter();
   const { activeChain, switchNetworkAsync: switchNetwork } = useNetwork();
   const [isChainChangerOpen, setIsChainChangerOpen] = useState(false);
+
+  console.log(project);
 
   useEffect(() => {
     useStore.setState({ openedProject: project });
