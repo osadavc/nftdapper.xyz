@@ -6,6 +6,7 @@ import { useNotifications } from "@mantine/notifications";
 import client from "utils/apiClient";
 import { ethers } from "ethers";
 import { useState } from "react";
+import ContractControls from "./ContractControls";
 
 const checkboxStyles = {
   label: {
@@ -125,7 +126,7 @@ const SmartContract = () => {
 
       <div className="mt-16">
         {openedProject?.smartContract?.contractAddress ? (
-          <></>
+          <ContractControls />
         ) : (
           <form
             className="flex flex-col md:flex-row"

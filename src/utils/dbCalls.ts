@@ -9,7 +9,16 @@ const select = {
   id: true,
   ownerId: true,
   owner: true,
-  smartContract: true,
+  smartContract: {
+    select: {
+      features: true,
+      abi: true,
+      contractAddress: true,
+      maxMintAmount: true,
+      mintFee: true,
+      saleStartingTime: true,
+    },
+  },
   smartContractId: true,
 };
 
@@ -89,6 +98,16 @@ export const saveDraftProject = async ({
   mintFee?: number;
   saleStartingTime?: number;
 }) => {
+  // console.log({
+  //   projectId,
+  //   ownerId,
+  //   abi,
+  //   features,
+  //   maxMintAmount: parseInt(maxMintAmount?.toString()!),
+  //   mintFee: parseFloat(mintFee?.toString()!),
+  //   saleStartingTime: saleStartingTime?.toString(),
+  // });
+
   const fetchedProject = await prisma.project.findFirst({
     where: {
       id: projectId,
@@ -100,29 +119,30 @@ export const saveDraftProject = async ({
     throw new Error("Project not found");
   }
 
-  const project = await prisma.project.update({
-    where: {
-      id: projectId,
-    },
+  const result = await prisma.smartContract.create({
     data: {
-      smartContract: {
-        create: {
-          abi,
-          features: {
-            create: features,
-          },
-          maxMintAmount: parseInt(maxMintAmount?.toString()!),
-          mintFee: parseFloat(mintFee?.toString()!),
-          saleStartingTime: saleStartingTime?.toString(),
+      abi,
+      features: {
+        create: features,
+      },
+      maxMintAmount: maxMintAmount && parseInt(maxMintAmount?.toString()!),
+      mintFee: mintFee && parseFloat(mintFee?.toString()!),
+      saleStartingTime: saleStartingTime
+        ? saleStartingTime?.toString()
+        : undefined,
+      Project: {
+        connect: {
+          id: projectId,
         },
       },
     },
     include: {
-      smartContract: true,
+      features: true,
+      Project: true,
     },
   });
 
-  return project;
+  return result;
 };
 
 export const updateAddress = async ({

@@ -105,6 +105,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     projectId: ctx.query.id,
   });
 
+  if (!project) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       user,

@@ -1,4 +1,4 @@
-import { Chain, SmartContract, User } from "@prisma/client";
+import { Chain, SmartContractFeatures, User } from "@prisma/client";
 import create from "zustand";
 
 export interface Project {
@@ -9,7 +9,14 @@ export interface Project {
   id: string;
   smartContractId: string | null;
   owner: User;
-  smartContract: SmartContract | null;
+  smartContract: {
+    abi: string | null;
+    saleStartingTime: string | null;
+    mintFee: string | null;
+    maxMintAmount: string | null;
+    contractAddress: string | null;
+    features: SmartContractFeatures;
+  } | null;
 }
 
 interface Store {

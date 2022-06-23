@@ -32,24 +32,23 @@ enum Chain {
 }
 
 model SmartContract {
-  id               String                  @id @default(cuid())
-  contractAddress  String?
-  abi              String?
-  features         SmartContractFeatures[]
-  Project          Project[]
-  saleStartingTime String?
-  mintFee          Float?
-  maxMintAmount    Int?
+  id                      String                @id @default(cuid())
+  contractAddress         String?
+  abi                     String?
+  features                SmartContractFeatures @relation(fields: [smartContractFeaturesId], references: [id], onDelete: Cascade)
+  Project                 Project[]
+  saleStartingTime        String?
+  mintFee                 Float?
+  maxMintAmount           Int?
+  smartContractFeaturesId String
 }
 
 model SmartContractFeatures {
-  id              String        @id @default(cuid())
-  smartContract   SmartContract @relation(fields: [smartContractId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  smartContractId String
-
+  id               String          @id @default(cuid())
   delayedReveal    Boolean
   pausable         Boolean
   saleStartingTime Boolean
   mintMultiple     Boolean
   paidMint         Boolean
+  SmartContract    SmartContract[]
 }

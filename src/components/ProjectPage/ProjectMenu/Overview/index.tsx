@@ -1,13 +1,9 @@
-import { useEffect, useState } from "react";
 import useStore from "store";
-import { useContractRead, useProvider } from "wagmi";
+import { useContractRead, useBalance } from "wagmi";
 import StatCard from "./StatCard";
 
 const Overview = () => {
   const openedProject = useStore((state) => state.openedProject);
-  const provider = useProvider();
-
-  const [balance, setBalance] = useState<string | null>(null);
 
   const { data: totalSupply } = useContractRead(
     {
@@ -19,16 +15,9 @@ const Overview = () => {
     "totalSupply"
   );
 
-  useEffect(() => {
-    if (!openedProject?.smartContract?.contractAddress) return;
-
-    (async () => {
-      const balance = await provider.getBalance(
-        openedProject?.smartContract?.contractAddress!
-      );
-      setBalance(balance.toString());
-    })();
-  }, [openedProject]);
+  const { data: balance } = useBalance({
+    addressOrName: openedProject?.smartContract?.contractAddress!,
+  });
 
   return (
     <div className="mt-3 px-6">
@@ -53,7 +42,7 @@ const Overview = () => {
         />
         <StatCard
           title="Balance Of The Contract"
-          count={balance}
+          count={balance?.value.toString() ?? null}
           suffix={"Ξ"}
         />
       </div>

@@ -143,6 +143,27 @@ contract ${startCase(toLower(tokenName)).replaceAll(
   `
       : ""
   }
+  
+  ${
+    features.mintMultiple
+      ? `
+  function setMaxMintAmount(uint256 _maxMintAmount) external onlyOwner {
+    maxMintAmount = _maxMintAmount;
+  }    
+  `
+      : ""
+  }
+
+
+  ${
+    features.paidMint
+      ? `
+  function setPrice(uint256 _price) external onlyOwner {
+    price = _price;
+  }    
+  `
+      : ""
+  }
 
   function _startTokenId() internal view virtual override returns (uint256) {
     return 1;
