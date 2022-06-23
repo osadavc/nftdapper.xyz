@@ -77,25 +77,31 @@ const SmartContract = () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum as any);
     const signer = provider.getSigner();
 
-    const factory = new ethers.ContractFactory(
-      contractInfo.abi,
-      contractInfo.bytecode,
-      signer
-    );
-    const contract = await factory.deploy();
-    await contract.deployed();
+    try {
+      const factory = new ethers.ContractFactory(
+        contractInfo.abi,
+        contractInfo.bytecode,
+        signer
+      );
+      const contract = await factory.deploy();
+      await contract.deployed();
 
-    const { data } = await client.post(
-      `/projects/${openedProject?.id}/contract/updateAddress`,
-      {
-        address: contract.address,
-      }
-    );
+      const { data } = await client.post(
+        `/projects/${openedProject?.id}/contract/updateAddress`,
+        {
+          address: contract.address,
+        }
+      );
 
-    console.log(data);
-
-    replaceProject(data);
-    setLoading(false);
+      replaceProject(data);
+      setLoading(false);
+    } catch (error) {
+      notification.showNotification({
+        message: "Something went wrong",
+        color: "red",
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -227,6 +233,7 @@ const SmartContract = () => {
                       label="Mint Fee (In Ether)"
                       type="number"
                       required
+                      step={0.00001}
                       size="md"
                       styles={inputStyles}
                       {...form.getInputProps("mintFee")}

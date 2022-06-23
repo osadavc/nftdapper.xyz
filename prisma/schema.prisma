@@ -44,7 +44,7 @@ model SmartContract {
 
 model SmartContractFeatures {
   id              String        @id @default(cuid())
-  smartContract   SmartContract @relation(fields: [smartContractId], references: [id], onDelete: Cascade)
+  smartContract   SmartContract @relation(fields: [smartContractId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   smartContractId String
 
   delayedReveal    Boolean

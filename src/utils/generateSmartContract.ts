@@ -129,7 +129,7 @@ contract ${startCase(toLower(tokenName)).replaceAll(
     features.mintMultiple ? "_tokenCount" : ""
   }) ${
     features.paidMint
-      ? `mintPriceCompliance(${features.mintMultiple ? "_tokenCount" : ""})`
+      ? `mintPriceCompliance(${features.mintMultiple ? "_tokenCount" : "1"})`
       : ""
   } {
     _mint(msg.sender, ${features.mintMultiple ? "_tokenCount" : "1"});

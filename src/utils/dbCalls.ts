@@ -106,18 +106,18 @@ export const saveDraftProject = async ({
     },
     data: {
       smartContract: {
-        update: {
+        create: {
           abi,
           features: {
             create: features,
           },
-          maxMintAmount,
-          mintFee,
+          maxMintAmount: parseInt(maxMintAmount?.toString()!),
+          mintFee: parseFloat(mintFee?.toString()!),
           saleStartingTime: saleStartingTime?.toString(),
         },
       },
     },
-    select: {
+    include: {
       smartContract: true,
     },
   });

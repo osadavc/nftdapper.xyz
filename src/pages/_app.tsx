@@ -9,6 +9,7 @@ import AuthProvider from "context/AuthContext";
 import nProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { WagmiConfig, createClient } from "wagmi";
+import { createWebStoragePersister } from "react-query/createWebStoragePersister";
 
 import Header from "components/Common/Header";
 
@@ -17,6 +18,14 @@ import WalletChecker from "components/Common/WalletChecker";
 
 const client = createClient({
   autoConnect: true,
+  persister: createWebStoragePersister({
+    key: "wagmi",
+    storage: {
+      getItem: () => null,
+      removeItem: () => null,
+      setItem: () => null,
+    },
+  }),
 });
 
 Router.events.on("routeChangeStart", nProgress.start);

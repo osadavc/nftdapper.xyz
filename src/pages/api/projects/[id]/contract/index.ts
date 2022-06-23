@@ -81,7 +81,7 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
       tokenSymbol: body.collectionSymbol,
       maxSupply: body.maxSupply,
       maxNumberOfTokens: body.mintMultiple ? body.maxNumber : undefined,
-      price: body.paidMint ? body.mintFee : undefined,
+      price: body.paidMint ? parseFloat(body.mintFee?.toString()!) : undefined,
       saleStartTime: body.saleStartingTimeInput
         ? body.saleStartingTimeInput
         : undefined,

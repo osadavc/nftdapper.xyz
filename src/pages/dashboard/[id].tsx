@@ -23,8 +23,6 @@ const SingleProject: FC<SingleProjectProps> = ({ project }) => {
   const { activeChain, switchNetworkAsync: switchNetwork } = useNetwork();
   const [isChainChangerOpen, setIsChainChangerOpen] = useState(false);
 
-  console.log(project);
-
   useEffect(() => {
     useStore.setState({ openedProject: project });
 

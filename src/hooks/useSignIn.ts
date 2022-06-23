@@ -74,8 +74,6 @@ const useSignIn = () => {
       hideNotification("sign-in-notification");
 
       const status = await router.push("/dashboard");
-      // TODO: Remove This
-      console.log(status);
     } catch (error) {
       console.log(error);
     } finally {
