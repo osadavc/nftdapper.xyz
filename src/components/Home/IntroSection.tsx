@@ -19,7 +19,7 @@ const IntroSection = () => {
   }, []);
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col items-center px-4 pt-24">
+    <div className="mx-auto flex max-w-7xl flex-col items-center px-4 py-24 pt-24 md:pt-36">
       <h1 className="text-center text-5xl font-extrabold leading-[60px] text-black md:text-6xl md:leading-[85px] lg:text-7xl">
         Build Your{" "}
         <span className="bg-gradient-to-r from-[#7880e7] to-[#2a3192] bg-clip-text text-transparent">
@@ -48,7 +48,7 @@ const IntroSection = () => {
         />{" "}
       </h2>
 
-      <p className="mt-12 w-[80%] text-center text-lg md:text-xl">
+      <p className="mt-12 w-[80%] text-center text-lg capitalize md:text-xl">
         Deploy Your Contract, Interact With It And Even Create Your Frontend For
         Minting NFTs With NFT Dapper. You own everything ! Your contract is
         yours. We don&apos;t own your contract but you do !

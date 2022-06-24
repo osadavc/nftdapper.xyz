@@ -1,3 +1,5 @@
+import Footer from "components/Home/Footer";
+import WhySection from "components/Home/WhySection";
 import type { GetServerSideProps, NextPage } from "next";
 
 import { getUser } from "utils/apiUtils";
@@ -8,6 +10,8 @@ const Home: NextPage = () => {
   return (
     <div className="font-inter">
       <IntroSection />
+      <WhySection />
+      <Footer />
     </div>
   );
 };
