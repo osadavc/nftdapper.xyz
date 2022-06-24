@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import useStore from "store";
 import { useContractRead, useBalance } from "wagmi";
 import StatCard from "./StatCard";
@@ -34,7 +35,7 @@ const Overview = () => {
           title="NFT Public Sale Price"
           count={
             openedProject?.smartContract?.mintFee
-              ? `${openedProject.smartContract.mintFee} ETH`
+              ? `${openedProject.smartContract.mintFee} Ξ`
               : openedProject?.smartContract?.contractAddress
               ? "FREE"
               : "-"
@@ -42,8 +43,10 @@ const Overview = () => {
         />
         <StatCard
           title="Balance Of The Contract"
-          count={balance?.value.toString() ?? null}
-          suffix={"Ξ"}
+          count={
+            ethers.utils.formatEther(balance?.value ?? 0).toString() ?? null
+          }
+          suffix={" Ξ"}
         />
       </div>
     </div>

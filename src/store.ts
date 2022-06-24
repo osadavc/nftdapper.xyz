@@ -24,6 +24,8 @@ interface Store {
   addProject: (project: Project) => void;
   replaceProject: (project: Project) => void;
   openedProject: Project | null;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
 }
 
 const useStore = create<Store>((set, get) => ({
@@ -32,6 +34,8 @@ const useStore = create<Store>((set, get) => ({
     set(() => ({ projects: [...get().projects, project] })),
   openedProject: null,
   replaceProject: (project) => set(() => ({ openedProject: project })),
+  loading: false,
+  setLoading: (loading) => set(() => ({ loading })),
 }));
 
 export default useStore;

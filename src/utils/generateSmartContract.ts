@@ -65,9 +65,9 @@ contract ${startCase(toLower(tokenName)).replaceAll(
   ${features.paidMint ? `uint256 public price = ${price} ether;` : ""}
   ${
     features.saleStartingTime
-      ? `uint256 public saleStartingTime = ${new Date(
-          saleStartTime!
-        ).getTime()};`
+      ? `uint256 public saleStartingTime = ${(
+          new Date(saleStartTime!).getTime() / 1000
+        ).toFixed()};`
       : ""
   }
    ${

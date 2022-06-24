@@ -22,7 +22,7 @@ const whyData = [
 
 const WhySection = () => {
   return (
-    <div className="mx-auto flex max-w-7xl flex-col items-center justify-center px-4 pt-32 pb-24">
+    <div className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 pt-32 pb-24">
       <h1 className="bg-gradient-to-br from-[#7880e7] to-[#2a3192] bg-clip-text text-center text-4xl font-bold text-transparent md:text-5xl md:!leading-[unset]">
         Why NFT Dapper ?
       </h1>

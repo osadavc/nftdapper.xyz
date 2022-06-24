@@ -89,6 +89,7 @@ export const saveDraftProject = async ({
   maxMintAmount,
   mintFee,
   saleStartingTime,
+  code,
 }: {
   projectId: string;
   ownerId: string;
@@ -97,17 +98,8 @@ export const saveDraftProject = async ({
   maxMintAmount?: number;
   mintFee?: number;
   saleStartingTime?: number;
+  code: string;
 }) => {
-  // console.log({
-  //   projectId,
-  //   ownerId,
-  //   abi,
-  //   features,
-  //   maxMintAmount: parseInt(maxMintAmount?.toString()!),
-  //   mintFee: parseFloat(mintFee?.toString()!),
-  //   saleStartingTime: saleStartingTime?.toString(),
-  // });
-
   const fetchedProject = await prisma.project.findFirst({
     where: {
       id: projectId,
@@ -121,6 +113,7 @@ export const saveDraftProject = async ({
 
   const result = await prisma.smartContract.create({
     data: {
+      code,
       abi,
       features: {
         create: features,

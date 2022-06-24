@@ -87,6 +87,8 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
         : undefined,
     });
 
+    console.log(code);
+
     const compilerInput = {
       language: "Solidity",
       sources: {
@@ -114,6 +116,7 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
     };
 
     await saveDraftProject({
+      code: code,
       projectId: id,
       ownerId: req.user.id,
       abi: JSON.stringify(deployerInfo.abi),

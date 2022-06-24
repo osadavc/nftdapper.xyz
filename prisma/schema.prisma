@@ -41,6 +41,7 @@ model SmartContract {
   mintFee                 Float?
   maxMintAmount           Int?
   smartContractFeaturesId String
+  code                    String
 }
 
 model SmartContractFeatures {
