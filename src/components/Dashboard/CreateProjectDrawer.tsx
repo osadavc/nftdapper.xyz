@@ -152,7 +152,10 @@ const CreateProjectDrawer: FC<CreateProjectDrawerProps> = ({
   );
 };
 
-const SelectItem = ({ label, isTestnet, ...others }: ItemProps, ref: any) => (
+export const SelectItem = (
+  { label, isTestnet, ...others }: ItemProps,
+  ref: any
+) => (
   <div ref={ref} {...others}>
     <Group noWrap>
       <Text size="sm">{label}</Text>

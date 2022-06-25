@@ -1,5 +1,6 @@
 import { Tabs } from "@mantine/core";
 import useStore from "store";
+import ImagesMetadata from "./ImagesMetadata";
 
 import Overview from "./Overview";
 import SmartContract from "./SmartContract";
@@ -27,14 +28,14 @@ const ProjectMenu = () => {
         label="Images and Metadata"
         disabled={!openedProject?.smartContractId}
       >
-        Messages tab content
+        <ImagesMetadata />
       </Tabs.Tab>
 
-      <Tabs.Tab label="Minting Page" disabled>
+      <Tabs.Tab label="Minting Page" disabled={!openedProject?.metadataURL}>
         Settings tab content
       </Tabs.Tab>
 
-      <Tabs.Tab label="Code" disabled>
+      <Tabs.Tab label="Code" disabled={!openedProject?.metadataURL}>
         Settings tab content
       </Tabs.Tab>
 

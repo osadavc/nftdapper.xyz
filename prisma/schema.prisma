@@ -22,6 +22,8 @@ model Project {
   chainId         Chain
   smartContract   SmartContract? @relation(fields: [smartContractId], references: [id], onDelete: Cascade)
   smartContractId String?
+  metadataURL     String?
+  metadataSuffix  String?
 }
 
 enum Chain {

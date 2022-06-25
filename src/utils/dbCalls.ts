@@ -73,7 +73,11 @@ export const getProjectOfAUser = async ({
       id: projectId,
       ownerId: ownerId,
     },
-    select,
+    select: {
+      ...select,
+      metadataSuffix: true,
+      metadataURL: true,
+    },
   });
 
   return project;
@@ -216,6 +220,46 @@ export const updateContract = async ({
     },
     select: {
       smartContract: true,
+    },
+  });
+
+  return project;
+};
+
+export const updateMetadataLocation = async ({
+  projectId,
+  ownerId,
+  metadataHash,
+  metadataSuffix,
+}: {
+  projectId: string;
+  ownerId: string;
+  metadataHash: string;
+  metadataSuffix: string;
+}) => {
+  const fetchedProject = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      ownerId: ownerId,
+    },
+  });
+
+  if (!fetchedProject) {
+    throw new Error("Project not found");
+  }
+
+  const project = await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      metadataURL: metadataHash,
+      metadataSuffix: metadataSuffix ? ".json" : "",
+    },
+    select: {
+      metadataSuffix: true,
+      metadataURL: true,
+      id: true,
     },
   });
 

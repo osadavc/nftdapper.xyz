@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import { useState } from "react";
 import ContractControls from "./ContractControls";
 
-const checkboxStyles = {
+export const checkboxStyles = {
   label: {
     fontFamily: "Inter",
   },

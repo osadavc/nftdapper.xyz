@@ -1,14 +1,7 @@
-import { Chain, SmartContractFeatures, User } from "@prisma/client";
+import { Project as DBProject, SmartContractFeatures } from "@prisma/client";
 import create from "zustand";
 
-export interface Project {
-  ownerId: string;
-  name: string;
-  chainId: Chain;
-  description: string | null;
-  id: string;
-  smartContractId: string | null;
-  owner: User;
+export interface Project extends DBProject {
   smartContract: {
     abi: string | null;
     saleStartingTime: string | null;
