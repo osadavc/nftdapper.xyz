@@ -69,7 +69,7 @@ const MyApp = ({ Component, pageProps: { user, ...pageProps } }: AppProps) => {
               />
               <link
                 rel="shortcut icon"
-                href="favicon.png"
+                href="/favicon.png"
                 type="image/x-icon"
               />
             </Head>
