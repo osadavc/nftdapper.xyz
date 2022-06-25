@@ -123,8 +123,8 @@ const ImagesMetadata = () => {
         )}
 
         <div className="mt-10 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4">
-          <div className="md:w-[50%]">
-            <p className="mt-2 text-center text-xs text-gray-600">
+          <div className="md:w-[45%]">
+            <p className="text-center text-xs text-gray-600">
               The live preview of the image will be displayed as you change the
               details. If the image isn&apos;t displayed, please check that the
               image is uploaded to IPFS.
@@ -151,7 +151,7 @@ const ImagesMetadata = () => {
             </div>
           </div>
 
-          <div className="md:w-[50%]">
+          <div className="md:w-[55%]">
             <TextInput
               // C-spell:disable-next-line
               label="Metadata HASH (eg: QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq)"
@@ -196,7 +196,13 @@ const ImagesMetadata = () => {
             <button
               className="mt-6 flex h-[40px] w-full items-center justify-center rounded-md bg-black font-inter text-white disabled:cursor-not-allowed disabled:opacity-80"
               type="submit"
-              disabled={appLoading || !!error}
+              disabled={
+                appLoading ||
+                !!error ||
+                ipfsHash == openedProject?.metadataURL ||
+                loading ||
+                !ipfsHash
+              }
               onClick={saveMetadataURL}
             >
               <p>Save Metadata URL</p>

@@ -21,6 +21,7 @@ const Dashboard: FC<DashboardProps> = ({ projects: serverProjects }) => {
   const projects = useStore((state) => state.projects);
 
   useEffect(() => {
+    // @ts-ignore
     useStore.setState({ projects: serverProjects });
   }, []);
 
@@ -57,7 +58,7 @@ const Dashboard: FC<DashboardProps> = ({ projects: serverProjects }) => {
         <CreateProjectDrawerContent toggleDrawer={toggleDrawer} />
       </Drawer>
 
-      <div className="mx-auto max-w-6xl px-4 pt-10">
+      <div className="mx-auto max-w-7xl px-4 pt-10">
         <DashboardHeader toggleDrawer={toggleDrawer} />
 
         <div className="mt-7">

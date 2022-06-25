@@ -36,7 +36,7 @@ const SingleProject: FC<SingleProjectProps> = ({ project }) => {
   }, [project]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pt-10 font-inter">
+    <div className="mx-auto max-w-7xl px-4 pt-10 font-inter">
       <Modal
         opened={isChainChangerOpen}
         onClose={() => setIsChainChangerOpen(false)}
