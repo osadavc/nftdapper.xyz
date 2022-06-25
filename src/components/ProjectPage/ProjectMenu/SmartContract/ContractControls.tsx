@@ -4,6 +4,7 @@ import { useNotifications } from "@mantine/notifications";
 import DateTimePicker from "components/Common/DateTimePicker";
 import { ethers } from "ethers";
 import useStore from "store";
+import client from "utils/apiClient";
 import getETHError from "utils/getETHError";
 import { useContract, useSigner } from "wagmi";
 import { inputStyles } from ".";
@@ -76,6 +77,9 @@ const ContractControls = () => {
     try {
       setLoading(true);
       await (await contract.setMaxMintAmount(form.values.maxNumber)).wait();
+      await client.patch(`/projects/${openedProject?.id}/contract`, {
+        maxNumber: form.values.maxNumber,
+      });
       successMessage();
     } catch (error: any) {
       notification.showNotification({
@@ -92,7 +96,14 @@ const ContractControls = () => {
   const changePaidMint = async () => {
     try {
       setLoading(true);
-      await (await contract.setPrice(ethers.utils)).wait();
+      await (
+        await contract.setPrice(
+          ethers.utils.parseEther(`${form.values.mintFee}`)
+        )
+      ).wait();
+      await client.patch(`/projects/${openedProject?.id}/contract`, {
+        mintFee: form.values.mintFee,
+      });
       successMessage();
     } catch (error: any) {
       notification.showNotification({
@@ -116,6 +127,9 @@ const ContractControls = () => {
           ).toFixed()
         )
       ).wait();
+      await client.patch(`/projects/${openedProject?.id}/contract`, {
+        saleStartingTimeInput: form.values.saleStartingTimeInput,
+      });
       successMessage();
     } catch (error: any) {
       notification.showNotification({

@@ -11,7 +11,7 @@ import {
   NextApiRequestWithUser,
 } from "utils/apiUtils";
 import { generateSmartContract } from "utils/generateSmartContract";
-import { saveDraftProject } from "utils/dbCalls";
+import { saveDraftProject, updateContract } from "utils/dbCalls";
 
 const openzeppelinPath = path.join(
   "node_modules",
@@ -43,6 +43,19 @@ const findImports = (filePath: string) => {
   return { contents: openzeppelinSource };
 };
 
+interface RequestBody {
+  collectionName: string;
+  collectionSymbol: string;
+  maxSupply: number;
+  pausable: boolean;
+  saleStartingTime: boolean;
+  mintMultiple: boolean;
+  paidMint: boolean;
+  maxNumber?: number;
+  mintFee?: number;
+  saleStartingTimeInput?: number;
+}
+
 const handler = nc<NextApiRequestWithUser, NextApiResponse>({
   onError,
   onNoMatch,
@@ -53,18 +66,6 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
 
     if (typeof id !== "string") {
       return res.status(400).json({ message: "invalid project id" });
-    }
-    interface RequestBody {
-      collectionName: string;
-      collectionSymbol: string;
-      maxSupply: number;
-      pausable: boolean;
-      saleStartingTime: boolean;
-      mintMultiple: boolean;
-      paidMint: boolean;
-      maxNumber?: number;
-      mintFee?: number;
-      saleStartingTimeInput?: number;
     }
 
     const body = req.body as RequestBody;
@@ -86,8 +87,6 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
         ? body.saleStartingTimeInput
         : undefined,
     });
-
-    console.log(code);
 
     const compilerInput = {
       language: "Solidity",
@@ -133,6 +132,29 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
     });
 
     res.status(200).send(deployerInfo);
+  })
+  .patch(async (req, res) => {
+    const { maxNumber, mintFee, saleStartingTimeInput } = req.body as {
+      maxNumber?: number;
+      mintFee?: number;
+      saleStartingTimeInput?: string;
+    };
+
+    const { id } = req.query;
+
+    if (typeof id !== "string") {
+      return res.status(400).json({ message: "invalid project id" });
+    }
+
+    const project = await updateContract({
+      ownerId: req.user.id,
+      projectId: id,
+      maxNumber,
+      mintFee,
+      saleStartingTimeInput,
+    });
+
+    res.status(200).json(project);
   });
 
 export default handler;

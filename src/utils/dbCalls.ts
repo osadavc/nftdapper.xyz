@@ -174,3 +174,50 @@ export const updateAddress = async ({
 
   return project;
 };
+
+export const updateContract = async ({
+  projectId,
+  ownerId,
+  maxNumber,
+  mintFee,
+  saleStartingTimeInput,
+}: {
+  projectId: string;
+  ownerId: string;
+  maxNumber?: number;
+  mintFee?: number;
+  saleStartingTimeInput?: string;
+}) => {
+  const fetchedProject = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      ownerId: ownerId,
+    },
+  });
+
+  if (!fetchedProject) {
+    throw new Error("Project not found");
+  }
+
+  const project = await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      smartContract: {
+        update: {
+          maxMintAmount: maxNumber && parseInt(maxNumber?.toString()!),
+          mintFee: mintFee && parseFloat(mintFee?.toString()!),
+          saleStartingTime: saleStartingTimeInput
+            ? saleStartingTimeInput?.toString()
+            : undefined,
+        },
+      },
+    },
+    select: {
+      smartContract: true,
+    },
+  });
+
+  return project;
+};
