@@ -3,6 +3,7 @@ import useStore from "store";
 import ImagesMetadata from "./ImagesMetadata";
 
 import Overview from "./Overview";
+import Settings from "./Settings";
 import SmartContract from "./SmartContract";
 
 const ProjectMenu = () => {
@@ -39,7 +40,9 @@ const ProjectMenu = () => {
         Settings tab content
       </Tabs.Tab>
 
-      <Tabs.Tab label="Settings">Settings tab content</Tabs.Tab>
+      <Tabs.Tab label="Settings">
+        <Settings />
+      </Tabs.Tab>
     </Tabs>
   );
 };

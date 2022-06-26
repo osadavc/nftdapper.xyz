@@ -265,3 +265,63 @@ export const updateMetadataLocation = async ({
 
   return project;
 };
+
+export const updateProject = async ({
+  projectId,
+  ownerId,
+  name,
+  description,
+  chainId,
+}: {
+  projectId: string;
+  ownerId: string;
+  name: string;
+  description: string;
+  chainId: number;
+}) => {
+  const fetchedProject = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      ownerId: ownerId,
+    },
+    select: {
+      smartContract: {
+        select: {
+          contractAddress: true,
+        },
+      },
+      chainId: true,
+    },
+  });
+
+  if (!fetchedProject) {
+    throw new Error("Project not found");
+  }
+
+  if (
+    fetchedProject.smartContract?.contractAddress &&
+    chainId != parseInt(fetchedProject.chainId.split("CHAIN")[1])
+  ) {
+    throw new Error("Cannot update project with deployed contract");
+  }
+
+  console.log("HEY");
+
+  const project = await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      name,
+      description,
+      chainId: `CHAIN${chainId}` as Chain,
+    },
+    select: {
+      name: true,
+      description: true,
+      chainId: true,
+    },
+  });
+
+  return project;
+};

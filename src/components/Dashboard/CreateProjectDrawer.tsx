@@ -18,7 +18,7 @@ import useStore from "store";
 
 import client from "utils/apiClient";
 
-interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
+export interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
   label: string;
   value: string;
   isTestnet: boolean;
