@@ -14,8 +14,6 @@ import { publicProvider } from "wagmi/providers/public";
 
 import { createWebStoragePersister } from "react-query/createWebStoragePersister";
 
-import Header from "components/Common/Header";
-
 import "../styles/globals.css";
 import WalletChecker from "components/Common/WalletChecker";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -87,7 +85,7 @@ const MyApp = ({ Component, pageProps: { user, ...pageProps } }: AppProps) => {
                 type="image/x-icon"
               />
             </Head>
-            <Header />
+
             <WalletChecker />
             <Component {...pageProps} />
           </WagmiConfig>

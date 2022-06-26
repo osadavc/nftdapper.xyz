@@ -13,6 +13,7 @@ import { getProjectOfAUser } from "utils/dbCalls";
 
 import { useNetwork } from "wagmi";
 import { Text, Modal } from "@mantine/core";
+import Header from "components/Common/Header";
 
 interface SingleProjectProps {
   project: Project;
@@ -38,45 +39,50 @@ const SingleProject: FC<SingleProjectProps> = ({ project }) => {
   }, [project]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pt-10 font-inter">
-      <Modal
-        opened={isChainChangerOpen}
-        onClose={() => setIsChainChangerOpen(false)}
-        title="Switch Network"
-        withCloseButton={false}
-        closeOnClickOutside={false}
-        closeOnEscape={false}
-      >
-        <Text size="sm">
-          The project&apos;s chain and the chain you are currently on do not
-          match. Switch to the project&apos;s chain in order to continue.
-        </Text>
+    <div>
+      <Header />
+      <div className="mx-auto max-w-7xl px-4 pt-10 font-inter">
+        <Modal
+          opened={isChainChangerOpen}
+          onClose={() => setIsChainChangerOpen(false)}
+          title="Switch Network"
+          withCloseButton={false}
+          closeOnClickOutside={false}
+          closeOnEscape={false}
+        >
+          <Text size="sm">
+            The project&apos;s chain and the chain you are currently on do not
+            match. Switch to the project&apos;s chain in order to continue.
+          </Text>
 
-        <div className="mt-4 flex justify-end">
-          <button
-            className="flex items-center justify-center space-x-2 rounded-md bg-black py-2 px-4 font-inter text-sm text-white transition-shadow hover:shadow-sm"
-            onClick={async () => {
-              await switchNetwork!(parseInt(project.chainId.split("CHAIN")[1]));
-              setIsChainChangerOpen(false);
-            }}
-          >
-            <p>Switch Chain</p>
-          </button>
+          <div className="mt-4 flex justify-end">
+            <button
+              className="flex items-center justify-center space-x-2 rounded-md bg-black py-2 px-4 font-inter text-sm text-white transition-shadow hover:shadow-sm"
+              onClick={async () => {
+                await switchNetwork!(
+                  parseInt(project.chainId.split("CHAIN")[1])
+                );
+                setIsChainChangerOpen(false);
+              }}
+            >
+              <p>Switch Chain</p>
+            </button>
+          </div>
+        </Modal>
+
+        <div
+          className="mt-2 mb-4 flex cursor-pointer items-center space-x-2 text-sm text-zinc-500 transition-colors hover:text-[#6066b9]"
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <TbArrowNarrowLeft className="text-base" />
+          <p>Go Back</p>
         </div>
-      </Modal>
 
-      <div
-        className="mt-2 mb-4 flex cursor-pointer items-center space-x-2 text-sm text-zinc-500 transition-colors hover:text-[#6066b9]"
-        onClick={() => {
-          router.back();
-        }}
-      >
-        <TbArrowNarrowLeft className="text-base" />
-        <p>Go Back</p>
+        <ProjectInfo project={openedProject!} />
+        <ProjectMenu />
       </div>
-
-      <ProjectInfo project={openedProject!} />
-      <ProjectMenu />
     </div>
   );
 };

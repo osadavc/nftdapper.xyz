@@ -1,3 +1,4 @@
+import Header from "components/Common/Header";
 import Footer from "components/Home/Footer";
 import WhySection from "components/Home/WhySection";
 import type { GetServerSideProps, NextPage } from "next";
@@ -9,6 +10,7 @@ import IntroSection from "../components/Home/IntroSection";
 const Home: NextPage = () => {
   return (
     <div className="font-inter">
+      <Header />
       <IntroSection />
       <WhySection />
       <Footer />

@@ -24,6 +24,7 @@ model Project {
   smartContractId String?
   metadataURL     String?
   metadataSuffix  String?
+  domain          String?
 }
 
 enum Chain {

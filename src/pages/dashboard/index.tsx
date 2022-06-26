@@ -5,6 +5,7 @@ import { Project } from "@prisma/client";
 import { FC, useEffect, useState } from "react";
 import useStore from "store";
 
+import Header from "components/Common/Header";
 import CreateProjectDrawerContent from "components/Dashboard/CreateProjectDrawer";
 import DashboardHeader from "components/Dashboard/DashboardHeader";
 import ProjectCard from "components/Dashboard/ProjectCard";
@@ -31,6 +32,7 @@ const Dashboard: FC<DashboardProps> = ({ projects: serverProjects }) => {
 
   return (
     <div className="font-inter">
+      <Header />
       <Drawer
         opened={isNewProjectDrawerOpen}
         onClose={toggleDrawer}
