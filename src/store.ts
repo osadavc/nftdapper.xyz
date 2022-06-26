@@ -1,4 +1,8 @@
-import { Project as DBProject, SmartContractFeatures } from "@prisma/client";
+import {
+  MintPage,
+  Project as DBProject,
+  SmartContractFeatures,
+} from "@prisma/client";
 import create from "zustand";
 
 export interface Project extends DBProject {
@@ -10,6 +14,7 @@ export interface Project extends DBProject {
     contractAddress: string | null;
     features: SmartContractFeatures;
   } | null;
+  mintPage: MintPage | null;
 }
 
 interface Store {

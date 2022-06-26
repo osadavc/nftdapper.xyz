@@ -63,4 +63,10 @@ model MintPage {
   domain    String
   imageList String[]
   Project   Project[]
+  location  Location
+}
+
+enum Location {
+  subdomain
+  customDomain
 }

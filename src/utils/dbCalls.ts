@@ -1,4 +1,5 @@
-import { Chain, SmartContractFeatures } from "@prisma/client";
+import { Chain, SmartContractFeatures, Location } from "@prisma/client";
+import axios from "axios";
 
 import prisma from "./prisma";
 
@@ -305,8 +306,6 @@ export const updateProject = async ({
     throw new Error("Cannot update project with deployed contract");
   }
 
-  console.log("HEY");
-
   const project = await prisma.project.update({
     where: {
       id: projectId,
@@ -324,4 +323,74 @@ export const updateProject = async ({
   });
 
   return project;
+};
+
+export const setMintingPageDetails = async ({
+  projectId,
+  ownerId,
+  location,
+  domain,
+}: {
+  projectId: string;
+  ownerId: string;
+  location: Location;
+  domain: string;
+}) => {
+  const fetchedProject = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      ownerId: ownerId,
+    },
+    select: {
+      metadataURL: true,
+      metadataSuffix: true,
+    },
+  });
+
+  if (!fetchedProject) {
+    throw new Error("Project not found");
+  }
+
+  const imageList: string[] = [];
+
+  for (let i = 1; i <= 5; i++) {
+    const { data: metadata } = await axios.get(
+      `https://ipfs.io/ipfs/${fetchedProject.metadataURL}/${i}${fetchedProject.metadataSuffix}`
+    );
+
+    imageList.push(`https://ipfs.io/ipfs/${metadata.image.split("//")[1]}`);
+  }
+
+  const project = prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      mintPage: {
+        create: {
+          domain,
+          location,
+          imageList,
+        },
+      },
+    },
+    include: {
+      mintPage: true,
+    },
+  });
+
+  return project;
+};
+
+export const getProjectFromDomain = async (domain: string) => {
+  const domainInfo = await prisma.mintPage.findFirst({
+    where: {
+      domain,
+    },
+    include: {
+      Project: true,
+    },
+  });
+
+  return { ...domainInfo, project: domainInfo?.Project[0] };
 };

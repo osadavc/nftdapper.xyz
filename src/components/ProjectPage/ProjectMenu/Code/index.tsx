@@ -102,7 +102,7 @@ const Code = () => {
   );
 };
 
-const SingleLineCode = ({
+export const SingleLineCode = ({
   children,
   className,
 }: {

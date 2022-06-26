@@ -13,7 +13,7 @@ const WalletChecker = () => {
   const { signOut } = useSignIn();
 
   useEffect(() => {
-    if (router.pathname == "/" || location.hostname.split(".").length == 3) {
+    if (router.pathname == "/") {
       return;
     }
 

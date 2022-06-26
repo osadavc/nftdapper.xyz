@@ -22,7 +22,7 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
           <p className="mt-[0.1rem] text-zinc-500">{project.description}</p>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex min-w-[3%] items-center justify-end space-x-2">
           <Tooltip label={chainInformation?.name}>
             <img
               src={chainInformation?.image}
