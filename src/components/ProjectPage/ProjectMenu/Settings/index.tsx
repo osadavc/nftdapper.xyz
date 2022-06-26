@@ -15,6 +15,8 @@ import client from "utils/apiClient";
 const Settings = () => {
   const { user } = useUser();
   const openedProject = useStore((state) => state.openedProject);
+  console.log(openedProject, "OPENED");
+  const replaceProject = useStore((state) => state.replaceProject);
 
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +32,17 @@ const Settings = () => {
     setLoading(true);
 
     try {
-      await client.patch(`/projects/${openedProject?.id}`, value);
+      const { data } = await client.patch(
+        `/projects/${openedProject?.id}`,
+        value
+      );
+      console.log(data);
+      replaceProject({
+        ...openedProject!,
+        name: data.name!,
+        description: data.description!,
+        chainId: data.chainId!,
+      });
 
       showNotification({
         message: "Successfully Updated The Project",

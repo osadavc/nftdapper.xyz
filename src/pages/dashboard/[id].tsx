@@ -23,6 +23,8 @@ const SingleProject: FC<SingleProjectProps> = ({ project }) => {
   const { activeChain, switchNetworkAsync: switchNetwork } = useNetwork();
   const [isChainChangerOpen, setIsChainChangerOpen] = useState(false);
 
+  const openedProject = useStore((state) => state.openedProject);
+
   useEffect(() => {
     useStore.setState({ openedProject: project });
 
@@ -73,7 +75,7 @@ const SingleProject: FC<SingleProjectProps> = ({ project }) => {
         <p>Go Back</p>
       </div>
 
-      <ProjectInfo project={project} />
+      <ProjectInfo project={openedProject!} />
       <ProjectMenu />
     </div>
   );
