@@ -263,6 +263,14 @@ const ContractControls = () => {
           </div>
         </div>
       )}
+
+      {!openedProject?.smartContract?.features.mintMultiple &&
+        !openedProject?.smartContract?.features.paidMint &&
+        !openedProject?.smartContract?.features.saleStartingTime && (
+          <p className="text-center text-sm text-gray-500">
+            Nothing to configure, you have not set up any features.
+          </p>
+        )}
     </div>
   );
 };

@@ -108,7 +108,8 @@ const SmartContract = () => {
   return (
     <div className="mt-3 px-6">
       <div className="mb-3 flex flex-col">
-        <p className="text-center text-sm text-gray-500">
+        <h2 className="mb-1 text-xl font-semibold">Smart Contract</h2>
+        <p className="text-sm text-gray-500">
           {openedProject?.smartContract?.contractAddress
             ? `Smart Contract is deployed successfully. You can interact with your contract here. `
             : `Time to generate your smart contract on demand. Select the features
@@ -117,7 +118,7 @@ const SmartContract = () => {
         </p>
 
         {!openedProject?.smartContract?.contractAddress && (
-          <span className="mt-2 text-center text-xs text-red-500">
+          <span className="mt-2 text-xs text-red-500">
             Please note that you can&apos;t add or remove features after the
             deployment
           </span>

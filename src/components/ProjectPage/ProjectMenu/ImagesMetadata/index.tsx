@@ -88,13 +88,14 @@ const ImagesMetadata = () => {
   return (
     <div className="mt-3 px-6">
       <div className="mb-3 flex flex-col">
-        <p className="text-center text-sm text-gray-500">
+        <h2 className="mb-1 text-xl font-semibold">Images and Metadata</h2>
+        <p className="text-sm text-gray-500">
           {openedProject?.metadataURL
             ? "You already have a metadata URL configured. Validate If it is correct or change it."
             : "Time to set your metadata URL. It will be used by the marketplaces to fetch your images and metadata."}
         </p>
         {!openedProject?.metadataURL && (
-          <div className="mt-5 space-y-1 text-center capitalize">
+          <div className="mt-5 space-y-1 capitalize">
             <p className="text-xs text-gray-600">
               You can generate your images and metadata by using{" "}
               <a
