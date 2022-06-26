@@ -8,13 +8,25 @@ import { NotificationsProvider } from "@mantine/notifications";
 import AuthProvider from "context/AuthContext";
 import nProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { WagmiConfig, createClient } from "wagmi";
+import { WagmiConfig, createClient, configureChains, chain } from "wagmi";
+import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
+
 import { createWebStoragePersister } from "react-query/createWebStoragePersister";
 
 import Header from "components/Common/Header";
 
 import "../styles/globals.css";
 import WalletChecker from "components/Common/WalletChecker";
+import { InjectedConnector } from "wagmi/connectors/injected";
+
+const { chains, provider } = configureChains(
+  [chain.mainnet, chain.polygon, chain.polygonMumbai, chain.rinkeby],
+  [
+    infuraProvider({ infuraId: process.env.NEXT_PUBLIC_INFURA_ID }),
+    publicProvider(),
+  ]
+);
 
 const client = createClient({
   autoConnect: true,
@@ -26,6 +38,8 @@ const client = createClient({
       setItem: () => null,
     },
   }),
+  connectors: [new InjectedConnector({ chains })],
+  provider,
 });
 
 Router.events.on("routeChangeStart", nProgress.start);
