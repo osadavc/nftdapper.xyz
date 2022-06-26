@@ -24,7 +24,8 @@ model Project {
   smartContractId String?
   metadataURL     String?
   metadataSuffix  String?
-  domain          String?
+  mintPage        MintPage?      @relation(fields: [mintPageId], references: [id])
+  mintPageId      String?
 }
 
 enum Chain {
@@ -55,4 +56,11 @@ model SmartContractFeatures {
   mintMultiple     Boolean
   paidMint         Boolean
   SmartContract    SmartContract[]
+}
+
+model MintPage {
+  id        String    @id @default(cuid())
+  domain    String
+  imageList String[]
+  Project   Project[]
 }

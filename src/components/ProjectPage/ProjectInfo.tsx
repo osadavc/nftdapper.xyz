@@ -23,7 +23,7 @@ const ProjectInfo: FC<ProjectInfoProps> = ({ project }) => {
         <p className="text-zinc-500">{project?.description}</p>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex w-[20%] items-center justify-end space-x-2">
         {loading && <Loader size="xs" className="mr-3" color="#000" />}
         <Tooltip label={chainInformation?.name}>
           <img

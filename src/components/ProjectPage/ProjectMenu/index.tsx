@@ -2,6 +2,7 @@ import { Tabs } from "@mantine/core";
 import useStore from "store";
 import Code from "./Code";
 import ImagesMetadata from "./ImagesMetadata";
+import MintingPage from "./MintingPage";
 
 import Overview from "./Overview";
 import Settings from "./Settings";
@@ -34,7 +35,7 @@ const ProjectMenu = () => {
       </Tabs.Tab>
 
       <Tabs.Tab label="Minting Page" disabled={!openedProject?.metadataURL}>
-        Settings tab content
+        <MintingPage />
       </Tabs.Tab>
 
       <Tabs.Tab label="Code" disabled={!openedProject?.metadataURL}>
