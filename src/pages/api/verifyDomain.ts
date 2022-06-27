@@ -7,9 +7,9 @@ import { getProjectFromDomain } from "utils/dbCalls";
 const handler = nc<NextApiRequestWithUser, NextApiResponse>({
   onError,
   onNoMatch,
-}).get((req, res) => {
+}).all(async (req, res) => {
   const domain = req.query.domain as string;
-  const project = getProjectFromDomain(domain);
+  const project = await getProjectFromDomain(domain);
 
   if (!project) {
     return res.status(404).json({
@@ -17,7 +17,7 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
     });
   }
 
-  return res.status(200);
+  return res.status(200).json(project);
 });
 
 export default handler;

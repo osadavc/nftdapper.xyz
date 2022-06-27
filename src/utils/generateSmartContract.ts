@@ -23,6 +23,9 @@ export const generateSmartContract = ({
   saleStartTime,
   maxNumberOfTokens,
 }: GenerateSmartContractOptions) => {
+
+  const contractName = startCase(toLower(tokenName)).split(" ").join("");
+
   if (!maxSupply) {
     throw new Error("maxSupply is required");
   }
@@ -45,77 +48,62 @@ pragma solidity ^0.8.4;
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-${
-  features.pausable
-    ? 'import "@openzeppelin/contracts/security/Pausable.sol";'
-    : ""
-}
+${features.pausable
+      ? 'import "@openzeppelin/contracts/security/Pausable.sol";'
+      : ""
+    }
 
-contract ${startCase(toLower(tokenName)).replaceAll(
-    " ",
-    ""
-  )} is ERC721A, Ownable ${features.pausable ? ", Pausable" : ""} {
+contract ${contractName} is ERC721A, Ownable ${features.pausable ? ", Pausable" : ""} {
 using Strings for uint256;
     
-  constructor() ERC721A("${startCase(toLower(tokenName)).replaceAll(
-    " ",
-    ""
-  )}", "${tokenSymbol.toUpperCase()}") {}
+  constructor() ERC721A("${contractName}", "${tokenSymbol.toUpperCase()}") {}
 
 
   string public baseURI;
   string public baseExtension = ".json";
   uint256 public maxSupply = ${maxSupply};
   ${features.paidMint ? `uint256 public price = ${price} ether;` : ""}
-  ${
-    features.saleStartingTime
+  ${features.saleStartingTime
       ? `uint256 public saleStartingTime = ${(
-          new Date(saleStartTime!).getTime() / 1000
-        ).toFixed()};`
+        new Date(saleStartTime!).getTime() / 1000
+      ).toFixed()};`
       : ""
-  }
-   ${
-     features.mintMultiple
-       ? `uint256 public maxMintAmount = ${maxNumberOfTokens};
+    }
+   ${features.mintMultiple
+      ? `uint256 public maxMintAmount = ${maxNumberOfTokens};
    `
-       : ""
-   }
-  modifier mintCompliance(${
-    features.mintMultiple ? "uint256 _mintAmount" : ""
-  }) {
-    require(totalSupply() + ${
-      features.mintMultiple ? "_mintAmount" : "1"
+      : ""
+    }
+  modifier mintCompliance(${features.mintMultiple ? "uint256 _mintAmount" : ""
+    }) {
+    require(totalSupply() + ${features.mintMultiple ? "_mintAmount" : "1"
     } <= maxSupply, "Max supply exceeded!");
     require(tx.origin == msg.sender, "The caller is another contract");
 
-    ${
-      features.saleStartingTime
-        ? 'require(saleStartingTime < block.timestamp, "Sale has not started yet");'
-        : ""
+    ${features.saleStartingTime
+      ? 'require(saleStartingTime < block.timestamp, "Sale has not started yet");'
+      : ""
     }
-    ${
-      features.mintMultiple && features.mintMultiple
-        ? `
+    ${features.mintMultiple && features.mintMultiple
+      ? `
     require(
       _mintAmount > 0 &&
         _mintAmount <= maxMintAmount &&
         _numberMinted(msg.sender) + _mintAmount <= maxMintAmount,
       "Invalid mint amount!"
     );`
-        : ""
+      : ""
     }_;
   }
-  ${
-    features.paidMint
+  ${features.paidMint
       ? `
   modifier mintPriceCompliance(uint256 _mintAmount) {
     require(msg.value >= (price * _mintAmount), "Insufficient funds!");
     _;
   }`
       : ""
-  }
-  ${
-    features.pausable
+    }
+  ${features.pausable
       ? `function pause() public onlyOwner {
     _pause();
   }
@@ -126,48 +114,42 @@ using Strings for uint256;
 
   `
       : ""
-  }
-  function mint(${features.mintMultiple ? "uint256 _tokenCount" : ""}) public ${
-    features.paidMint ? "payable" : ""
-  } ${features.pausable ? "whenNotPaused" : ""} mintCompliance(${
-    features.mintMultiple ? "_tokenCount" : ""
-  }) ${
-    features.paidMint
+    }
+  function mint(${features.mintMultiple ? "uint256 _tokenCount" : ""}) public ${features.paidMint ? "payable" : ""
+    } ${features.pausable ? "whenNotPaused" : ""} mintCompliance(${features.mintMultiple ? "_tokenCount" : ""
+    }) ${features.paidMint
       ? `mintPriceCompliance(${features.mintMultiple ? "_tokenCount" : "1"})`
       : ""
-  } {
+    } {
     _mint(msg.sender, ${features.mintMultiple ? "_tokenCount" : "1"});
   }
-  ${
-    features.saleStartingTime
+  ${features.saleStartingTime
       ? `
   function setSaleStartingTime(uint256 _saleStartingTime) external onlyOwner {
     saleStartingTime = _saleStartingTime;
   }
   `
       : ""
-  }
+    }
   
-  ${
-    features.mintMultiple
+  ${features.mintMultiple
       ? `
   function setMaxMintAmount(uint256 _maxMintAmount) external onlyOwner {
     maxMintAmount = _maxMintAmount;
   }    
   `
       : ""
-  }
+    }
 
 
-  ${
-    features.paidMint
+  ${features.paidMint
       ? `
   function setPrice(uint256 _price) external onlyOwner {
     price = _price;
   }    
   `
       : ""
-  }
+    }
   function setBaseURI(string memory _newBaseURI) public onlyOwner {
     baseURI = _newBaseURI;
   }
@@ -210,5 +192,5 @@ using Strings for uint256;
 
 }`;
 
-  return { code, name: startCase(toLower(tokenName)).replaceAll(" ", "") };
+  return { code, name: contractName };
 };

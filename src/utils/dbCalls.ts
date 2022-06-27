@@ -368,10 +368,17 @@ export const setMintingPageDetails = async ({
     },
     data: {
       mintPage: {
-        create: {
-          domain,
-          location,
-          imageList,
+        upsert: {
+          create: {
+            domain,
+            location,
+            imageList,
+          },
+          update: {
+            domain,
+            location,
+            imageList,
+          }
         },
       },
     },

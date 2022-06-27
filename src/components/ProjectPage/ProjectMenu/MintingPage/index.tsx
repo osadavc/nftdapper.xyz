@@ -23,10 +23,11 @@ const MintingPage = () => {
       openedProject?.mintPage?.location as "subdomain" | "customDomain"
     );
 
+
     setInput(
-      openedProject?.mintPage
+      openedProject?.mintPage?.location == "subdomain" ? openedProject?.mintPage
         ?.domain!.split(process.env.NEXT_PUBLIC_ROOT_URL!)[0]
-        .replace(".", "")!
+        .replace(".", "")! : openedProject?.mintPage?.domain!
     );
   }, [openedProject]);
 
@@ -130,7 +131,7 @@ const MintingPage = () => {
 
             <p className="mt-2 text-sm text-gray-500">
               Make sure to add a <SingleLineCode>CNAME</SingleLineCode> record
-              named as <SingleLineCode>@</SingleLineCode> pointing to{" "}
+              named as <SingleLineCode>{input.split(".").length > 2 ? input.split(".")[0] : "@"}</SingleLineCode> pointing to{" "}
               <SingleLineCode>cname.nftdapper.xyz</SingleLineCode>
             </p>
           </div>

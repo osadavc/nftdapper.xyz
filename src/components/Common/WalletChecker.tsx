@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAccount, useConnect } from "wagmi";
-import { useNotifications } from "@mantine/notifications";
+import { hideNotification, useNotifications } from "@mantine/notifications";
 import useSignIn from "hooks/useSignIn";
 
 const WalletChecker = () => {
@@ -24,21 +24,25 @@ const WalletChecker = () => {
           signOut();
         }
       });
+  }, [router.pathname, account]);
 
+  useEffect(() => {
     (async () => {
       try {
         if (!account?.address) {
           await connect(connectors[0]);
         }
       } catch (error) {
+        hideNotification("wallet-connect")
         showNotification({
+          id: "wallet-connect",
           message: "Please connect to a wallet",
           color: "red",
         });
         signOut();
       }
     })();
-  }, [router.pathname, account]);
+  }, [])
 
   return null;
 };

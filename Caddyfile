@@ -1,0 +1,49 @@
+{
+	on_demand_tls {
+		ask https://nftdapper.xyz/api/verifyDomain
+	}
+}
+
+nftdapper.xyz {
+	reverse_proxy 127.0.0.1:3000
+
+	log {
+		output file /home/osada/caddy2/access.log
+	}
+}
+
+cname.nftdapper.xyz {
+	reverse_proxy 127.0.0.1:3000
+
+	log {
+		output file /home/osada/caddy2/access.log
+	}
+}
+
+https:// {
+	tls {
+		on_demand
+	}
+
+	reverse_proxy 127.0.0.1:3000 {
+		header_up host {host}
+	}
+
+	log {
+		output file /home/osada/caddy2/access.log
+	}
+}
+
+*.nftdapper.xyz {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_KEY}
+	}
+
+	reverse_proxy 127.0.0.1:3000 {
+		header_up host {host}
+	}
+
+	log {
+		output file /home/osada/caddy2/access.log
+	}
+}
