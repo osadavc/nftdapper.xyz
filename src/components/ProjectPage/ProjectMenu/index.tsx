@@ -29,7 +29,7 @@ const ProjectMenu = () => {
 
       <Tabs.Tab
         label="Images and Metadata"
-        disabled={!openedProject?.smartContractId}
+        disabled={!openedProject?.smartContract?.contractAddress}
       >
         <ImagesMetadata />
       </Tabs.Tab>
