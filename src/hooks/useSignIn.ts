@@ -73,7 +73,7 @@ const useSignIn = () => {
       });
       hideNotification("sign-in-notification");
 
-      const status = await router.push("/dashboard");
+      await router.push("/dashboard");
     } catch (error) {
       console.log(error);
     } finally {
