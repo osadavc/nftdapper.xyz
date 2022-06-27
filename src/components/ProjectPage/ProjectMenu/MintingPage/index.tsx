@@ -19,13 +19,25 @@ const MintingPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setInput("");
-  }, [location]);
+    setLocation(
+      openedProject?.mintPage?.location as "subdomain" | "customDomain"
+    );
+    console.log(
+      openedProject?.mintPage?.domain as "subdomain" | "customDomain"
+    );
+    setInput(
+      openedProject?.mintPage
+        ?.domain!.split(process.env.NEXT_PUBLIC_ROOT_URL!)[0]
+        .replace(".", "")!
+    );
+  }, [openedProject]);
 
   const submitForm = async () => {
     setLoading(true);
 
     try {
+      if (!location || !input) throw new Error("Please fill in all fields");
+
       await client.patch(`/projects/${openedProject?.id}/mintPage`, {
         location,
         input,

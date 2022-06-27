@@ -78,6 +78,7 @@ export const getProjectOfAUser = async ({
       ...select,
       metadataSuffix: true,
       metadataURL: true,
+      mintPage: true,
     },
   });
 
@@ -383,14 +384,29 @@ export const setMintingPageDetails = async ({
 };
 
 export const getProjectFromDomain = async (domain: string) => {
-  const domainInfo = await prisma.mintPage.findFirst({
+  const domainInfo = await prisma.project.findFirst({
     where: {
-      domain,
+      mintPage: {
+        domain,
+      },
     },
     include: {
-      Project: true,
+      mintPage: true,
+      smartContract: {
+        select: {
+          contractAddress: true,
+          abi: true,
+          maxMintAmount: true,
+          features: {
+            select: {
+              mintMultiple: true,
+              paidMint: true,
+            },
+          },
+        },
+      },
     },
   });
 
-  return { ...domainInfo, project: domainInfo?.Project[0] };
+  return domainInfo;
 };
