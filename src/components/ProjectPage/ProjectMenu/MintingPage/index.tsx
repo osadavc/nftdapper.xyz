@@ -112,7 +112,7 @@ const MintingPage = () => {
           <div>
             <TextInput
               label="Sub Domain"
-              placeholder="Enter The Subdomain You're Looking For"
+              placeholder="Eg: boredapeyachtclub"
               size="md"
               required
               value={input}
@@ -130,7 +130,7 @@ const MintingPage = () => {
           <div>
             <TextInput
               label="Custom Domain"
-              placeholder="Enter The Domain"
+              placeholder="Eg: boredapeyachtclub.com"
               size="md"
               required
               value={input}
@@ -162,8 +162,23 @@ const MintingPage = () => {
             <p>Configure Minting Page</p>
           )}
         </button>
+
+        <div className="space-y-3">
+          {openedProject?.mintPage?.domain && (
+            <div className="bg-zinc-50 w-full px-4 py-2 rounded-md">
+              <p>The minting page should be accessible on <a href={`https://${openedProject?.mintPage?.domain}`} target="_blank" rel="noopener noreferrer">https://{openedProject?.mintPage?.domain}</a></p>
+            </div>
+          )}
+
+          {openedProject?.mintPage?.location == "customDomain" && (
+            <div className="bg-zinc-50 w-full px-4 py-2 rounded-md">
+              <p>It might take up to 48 hours to propagate DNS to show the minting page</p>
+            </div>
+          )}
+        </div>
+
       </div>
-    </div>
+    </div >
   );
 };
 
