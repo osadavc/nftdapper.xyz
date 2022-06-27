@@ -143,6 +143,23 @@ const ContractControls = () => {
     }
   };
 
+  const withdrawFromContract = async () => {
+    try {
+      setLoading(true);
+      await (await contract.withdraw()).wait();
+      successMessage();
+    } catch (error: any) {
+      notification.showNotification({
+        message: `Transaction Reverted: ${
+          getETHError(error) || "Error Occurred"
+        }`,
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-10">
       {openedProject?.smartContract?.features.pausable && (
@@ -271,6 +288,22 @@ const ContractControls = () => {
             Nothing to configure, you have not set up any features.
           </p>
         )}
+
+      <div>
+        <h2 className="mb-3 text-xl">
+          Feature: <span className="font-semibold">Withdraw Funds</span>
+        </h2>
+
+        <div className="flex space-x-3">
+          <button
+            className="flex items-center justify-center space-x-2 rounded-md bg-black py-2 px-4 font-inter text-sm text-white transition-shadow hover:shadow-sm disabled:opacity-75"
+            onClick={withdrawFromContract}
+            disabled={loading}
+          >
+            Withdraw
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
