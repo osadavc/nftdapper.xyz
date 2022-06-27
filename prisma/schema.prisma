@@ -60,7 +60,7 @@ model SmartContractFeatures {
 
 model MintPage {
   id        String    @id @default(cuid())
-  domain    String
+  domain    String    @unique
   imageList String[]
   Project   Project[]
   location  Location
