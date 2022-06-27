@@ -26,10 +26,7 @@ const handler = nc<NextApiRequestWithUser, NextApiResponse>({
     const project = await setMintingPageDetails({
       projectId: id,
       ownerId: req.user.id,
-      domain:
-        location == "subdomain"
-          ? `${input}.${process.env.NEXT_PUBLIC_ROOT_URL}`
-          : input,
+      domain: input,
       location: location as Location,
     });
 

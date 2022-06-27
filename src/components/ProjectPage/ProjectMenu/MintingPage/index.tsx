@@ -11,6 +11,7 @@ import { SingleLineCode } from "../Code";
 
 const MintingPage = () => {
   const openedProject = useStore((state) => state.openedProject);
+  const replaceProject = useStore((state) => state.replaceProject);
 
   const [location, setLocation] = useState<"" | "subdomain" | "customDomain">(
     ""
@@ -23,11 +24,12 @@ const MintingPage = () => {
       openedProject?.mintPage?.location as "subdomain" | "customDomain"
     );
 
-
     setInput(
-      openedProject?.mintPage?.location == "subdomain" ? openedProject?.mintPage
-        ?.domain!.split(process.env.NEXT_PUBLIC_ROOT_URL!)[0]
-        .replace(".", "")! : openedProject?.mintPage?.domain!
+      openedProject?.mintPage?.location == "subdomain"
+        ? openedProject?.mintPage
+          ?.domain!.split(process.env.NEXT_PUBLIC_ROOT_URL!)[0]
+          .replace(".", "")!
+        : openedProject?.mintPage?.domain!
     );
   }, [openedProject]);
 
@@ -37,9 +39,17 @@ const MintingPage = () => {
     try {
       if (!location || !input) throw new Error("Please fill in all fields");
 
-      await client.patch(`/projects/${openedProject?.id}/mintPage`, {
-        location,
-        input,
+      const { data } = await client.patch(
+        `/projects/${openedProject?.id}/mintPage`,
+        {
+          location,
+          input,
+        }
+      );
+
+      replaceProject({
+        ...openedProject!,
+        mintPage: data.mintPage,
       });
 
       showNotification({
@@ -131,8 +141,11 @@ const MintingPage = () => {
 
             <p className="mt-2 text-sm text-gray-500">
               Make sure to add a <SingleLineCode>CNAME</SingleLineCode> record
-              named as <SingleLineCode>{input.split(".").length > 2 ? input.split(".")[0] : "@"}</SingleLineCode> pointing to{" "}
-              <SingleLineCode>cname.nftdapper.xyz</SingleLineCode>
+              named as{" "}
+              <SingleLineCode>
+                {input.split(".").length > 2 ? input.split(".")[0] : "@"}
+              </SingleLineCode>{" "}
+              pointing to <SingleLineCode>cname.nftdapper.xyz</SingleLineCode>
             </p>
           </div>
         )}
