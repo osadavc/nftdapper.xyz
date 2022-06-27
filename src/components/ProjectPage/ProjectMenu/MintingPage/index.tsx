@@ -22,9 +22,7 @@ const MintingPage = () => {
     setLocation(
       openedProject?.mintPage?.location as "subdomain" | "customDomain"
     );
-    console.log(
-      openedProject?.mintPage?.domain as "subdomain" | "customDomain"
-    );
+
     setInput(
       openedProject?.mintPage
         ?.domain!.split(process.env.NEXT_PUBLIC_ROOT_URL!)[0]

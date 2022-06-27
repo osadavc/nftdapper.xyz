@@ -15,7 +15,6 @@ import client from "utils/apiClient";
 const Settings = () => {
   const { user } = useUser();
   const openedProject = useStore((state) => state.openedProject);
-  console.log(openedProject, "OPENED");
   const replaceProject = useStore((state) => state.replaceProject);
 
   const [loading, setLoading] = useState(false);
@@ -36,7 +35,7 @@ const Settings = () => {
         `/projects/${openedProject?.id}`,
         value
       );
-      console.log(data);
+
       replaceProject({
         ...openedProject!,
         name: data.name!,
