@@ -63,7 +63,7 @@ const MintPage = ({ project }: { project: Project }) => {
       setError(null);
       setTx(null);
 
-      let price;
+      let price = 0;
       let txId;
 
       if (project.smartContract?.features?.paidMint) {
