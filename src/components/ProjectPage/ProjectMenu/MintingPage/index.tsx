@@ -27,8 +27,8 @@ const MintingPage = () => {
     setInput(
       openedProject?.mintPage?.location == "subdomain"
         ? openedProject?.mintPage
-          ?.domain!.split(process.env.NEXT_PUBLIC_ROOT_URL!)[0]
-          .replace(".", "")!
+            ?.domain!.split(process.env.NEXT_PUBLIC_ROOT_URL!)[0]
+            .replace(".", "")!
         : openedProject?.mintPage?.domain!
     );
   }, [openedProject]);
@@ -165,20 +165,38 @@ const MintingPage = () => {
 
         <div className="space-y-3">
           {openedProject?.mintPage?.domain && (
-            <div className="bg-zinc-50 w-full px-4 py-2 rounded-md">
-              <p>The minting page should be accessible on <a href={`https://${openedProject?.mintPage?.domain}`} target="_blank" rel="noopener noreferrer">https://{openedProject?.mintPage?.domain}</a></p>
+            <div className="w-full rounded-md bg-zinc-50 px-4 py-2">
+              <p>
+                The minting page should be accessible on{" "}
+                <a
+                  href={`https://${openedProject?.mintPage?.domain}${
+                    openedProject.mintPage.location == "subdomain"
+                      ? process.env.NEXT_PUBLIC_ROOT_URL
+                      : ""
+                  }`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  https://{openedProject?.mintPage?.domain}
+                  {openedProject.mintPage.location == "subdomain"
+                    ? process.env.NEXT_PUBLIC_ROOT_URL
+                    : ""}
+                </a>
+              </p>
             </div>
           )}
 
           {openedProject?.mintPage?.location == "customDomain" && (
-            <div className="bg-zinc-50 w-full px-4 py-2 rounded-md">
-              <p>It might take up to 48 hours to propagate DNS to show the minting page</p>
+            <div className="w-full rounded-md bg-zinc-50 px-4 py-2">
+              <p>
+                It might take up to 48 hours to propagate DNS to show the
+                minting page
+              </p>
             </div>
           )}
         </div>
-
       </div>
-    </div >
+    </div>
   );
 };
 
