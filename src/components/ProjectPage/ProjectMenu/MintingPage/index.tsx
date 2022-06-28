@@ -171,7 +171,7 @@ const MintingPage = () => {
                 <a
                   href={`https://${openedProject?.mintPage?.domain}${
                     openedProject.mintPage.location == "subdomain"
-                      ? process.env.NEXT_PUBLIC_ROOT_URL
+                      ? `.${process.env.NEXT_PUBLIC_ROOT_URL}`
                       : ""
                   }`}
                   target="_blank"
@@ -179,7 +179,7 @@ const MintingPage = () => {
                 >
                   https://{openedProject?.mintPage?.domain}
                   {openedProject.mintPage.location == "subdomain"
-                    ? process.env.NEXT_PUBLIC_ROOT_URL
+                    ? `.${process.env.NEXT_PUBLIC_ROOT_URL}`
                     : ""}
                 </a>
               </p>
