@@ -6,7 +6,13 @@ import { useEffect, useState } from "react";
 import { Project } from "store";
 import { getProjectFromDomain } from "utils/dbCalls";
 import getETHError from "utils/getETHError";
-import { useAccount, useConnect, useContract, useSigner } from "wagmi";
+import {
+  useAccount,
+  useConnect,
+  useContract,
+  useNetwork,
+  useSigner,
+} from "wagmi";
 
 const MintPage = ({ project }: { project: Project }) => {
   const [imageNumber, setImageNumber] = useState(0);
@@ -16,8 +22,9 @@ const MintPage = ({ project }: { project: Project }) => {
   const [tx, setTx] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const { data: account } = useAccount();;
+  const { data: account } = useAccount();
   const { connect, connectors } = useConnect();
+  const { activeChain, switchNetwork } = useNetwork();
 
   const { data: signer } = useSigner();
 
@@ -132,13 +139,21 @@ const MintPage = ({ project }: { project: Project }) => {
         )}
       </div>
 
-      {account ? (
+      {account && activeChain?.id == parseInt(project.chainId.slice(5)) ? (
         <button
           className="mt-8 w-[98%] rounded-md border border-black py-3 px-8 font-inter text-xl font-bold disabled:cursor-not-allowed disabled:opacity-80"
           onClick={mint}
           disabled={minting}
         >
           {minting ? "Minting..." : "Mint Now"}
+        </button>
+      ) : activeChain?.id !== parseInt(project.chainId.slice(5)) && account ? (
+        <button
+          className="mt-8 w-[98%] rounded-md border border-black py-3 px-8 font-inter text-xl font-bold disabled:cursor-not-allowed disabled:opacity-80"
+          onClick={() => switchNetwork!(parseInt(project.chainId.slice(5)))}
+          disabled={minting}
+        >
+          Switch Network
         </button>
       ) : (
         <button
