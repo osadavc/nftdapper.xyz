@@ -27,13 +27,17 @@ const WalletChecker = () => {
   }, [router.pathname, account]);
 
   useEffect(() => {
+    if (router.pathname == "/") {
+      return;
+    }
+
     (async () => {
       try {
         if (!account?.address) {
           await connect(connectors[0]);
         }
       } catch (error) {
-        hideNotification("wallet-connect")
+        hideNotification("wallet-connect");
         showNotification({
           id: "wallet-connect",
           message: "Please connect to a wallet",
@@ -42,7 +46,7 @@ const WalletChecker = () => {
         signOut();
       }
     })();
-  }, [])
+  }, []);
 
   return null;
 };
