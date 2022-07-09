@@ -9,7 +9,14 @@ export default class _Document extends Document {
   render() {
     return (
       <Html>
-        <Head />
+        <Head>
+          <script
+            async
+            defer
+            data-website-id="abb6f6cd-141e-4090-a428-9b0ef5ef58aa"
+            src="https://analytics.osadavidath.com/umami.js"
+          ></script>
+        </Head>
         <body>
           <Main />
           <NextScript />
